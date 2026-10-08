@@ -10,7 +10,10 @@ const themeVars = Object.fromEntries(
     scheme,
     vars(
       Object.fromEntries(
-        Object.entries(colors).map(([name, value]) => [`--color-${name}`, value]),
+        Object.entries(colors).map(([name, value]) => [
+          `--color-${name}`,
+          value,
+        ]),
       ),
     ),
   ]),
@@ -22,5 +25,9 @@ const themeVars = Object.fromEntries(
  */
 export function ThemeProvider({ children }: PropsWithChildren) {
   const { scheme } = useTheme();
-  return <View className="flex-1" style={themeVars[scheme]}>{children}</View>;
+  return (
+    <View className="flex-1" style={themeVars[scheme]}>
+      {children}
+    </View>
+  );
 }

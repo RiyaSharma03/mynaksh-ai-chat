@@ -23,7 +23,9 @@ describe('normalizeMessages', () => {
   });
 
   it('defaults createdAt and the human author name', () => {
-    const [message] = normalizeMessages([{ id: 'x', type: 'human', text: 'Hi' }]);
+    const [message] = normalizeMessages([
+      { id: 'x', type: 'human', text: 'Hi' },
+    ]);
     expect(message.type === 'human' && message.author.name).toBe('Astrologer');
     expect(typeof message.createdAt).toBe('number');
   });
@@ -49,8 +51,8 @@ describe('normalizeMessages', () => {
         ],
       },
     ]);
-    expect(message.type === 'ai' && message.recommendations.map(r => r.type)).toEqual([
-      'live_puja',
-    ]);
+    expect(
+      message.type === 'ai' && message.recommendations.map(r => r.type),
+    ).toEqual(['live_puja']);
   });
 });

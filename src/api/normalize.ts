@@ -31,11 +31,17 @@ function normalizeMessage(wire: WireMessage): Message | null {
       return {
         ...base,
         type: 'ai',
-        recommendations: (wire.recommendations ?? []).flatMap(normalizeRecommendation),
+        recommendations: (wire.recommendations ?? []).flatMap(
+          normalizeRecommendation,
+        ),
         feedback: { rating: null, reasons: [] },
       };
     case 'human':
-      return { ...base, type: 'human', author: { name: wire.author?.name ?? 'Astrologer' } };
+      return {
+        ...base,
+        type: 'human',
+        author: { name: wire.author?.name ?? 'Astrologer' },
+      };
     case 'system':
       return { ...base, type: 'system' };
     default:
@@ -47,6 +53,12 @@ function normalizeMessage(wire: WireMessage): Message | null {
 function normalizeRecommendation(wire: WireRecommendation): Recommendation[] {
   if (!wire.id || !wire.type || !wire.title) return [];
   return [
-    { id: wire.id, type: wire.type, title: wire.title, subtitle: wire.subtitle, data: wire.data },
+    {
+      id: wire.id,
+      type: wire.type,
+      title: wire.title,
+      subtitle: wire.subtitle,
+      data: wire.data,
+    },
   ];
 }
