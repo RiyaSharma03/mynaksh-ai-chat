@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
 import { useAppSelector } from '../../../store/hooks';
 import { selectMessageById } from '../../../store/slices/conversationSlice';
-import { senderName } from '../../../utils/senderName';
+import { previewText, senderName } from '../../../utils/senderName';
 
 /** The quoted original inside a reply bubble. Selects the original itself by id. */
 export function QuotedReply({ id }: { id: string }) {
@@ -14,7 +14,7 @@ export function QuotedReply({ id }: { id: string }) {
             {senderName(original)}
           </Text>
           <Text className="text-xs text-white/80" numberOfLines={2}>
-            {original.text}
+            {previewText(original)}
           </Text>
         </>
       ) : (

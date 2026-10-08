@@ -56,3 +56,27 @@ describe('normalizeMessages', () => {
     ).toEqual(['live_puja']);
   });
 });
+
+describe('messages without text', () => {
+  it('keeps a cards-only AI message', () => {
+    const messages = normalizeMessages([
+      {
+        id: 'a',
+        type: 'ai',
+        recommendations: [{ id: '1', type: 'tarot', title: 'Tarot' }],
+      },
+    ]);
+    expect(messages).toHaveLength(1);
+    expect(messages[0].text).toBe('');
+  });
+
+  it('drops an AI message with neither text nor cards', () => {
+    expect(
+      normalizeMessages([{ id: 'a', type: 'ai', recommendations: [] }]),
+    ).toEqual([]);
+  });
+
+  it('drops other messages without text', () => {
+    expect(normalizeMessages([{ id: 'a', type: 'user' }])).toEqual([]);
+  });
+});

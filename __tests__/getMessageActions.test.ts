@@ -28,3 +28,15 @@ it('offers retry instead of reply on a failed message', () => {
 it('offers nothing on system events', () => {
   expect(getMessageActions({ ...base, type: 'system' })).toEqual([]);
 });
+
+it('offers no copy on a cards-only AI message', () => {
+  expect(
+    getMessageActions({
+      ...base,
+      text: '',
+      type: 'ai',
+      recommendations: [{ id: '1', type: 'tarot', title: 'Tarot' }],
+      feedback: { rating: null, reasons: [] },
+    }),
+  ).toEqual(['reply', 'delete']);
+});

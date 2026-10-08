@@ -6,16 +6,12 @@ const DAY = 24 * 60;
 
 /**
  * Yesterday's history (to show date separators), then the assignment's payload.
+ * The history has no "session started" event of its own, so the payload's
+ * one isn't shown twice.
  * Schema extensions: createdAt on every message, author on human messages,
  * and `data` / extra types on recommendations.
  */
 export const initialMessages: WireMessage[] = [
-  {
-    id: 'h1',
-    type: 'system',
-    text: 'Your session with AI Astrologer has started.',
-    createdAt: minutesAgo(DAY + 30),
-  },
   {
     id: 'h2',
     type: 'user',

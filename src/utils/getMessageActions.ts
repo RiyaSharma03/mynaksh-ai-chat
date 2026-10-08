@@ -8,8 +8,8 @@ export type MessageAction = 'reply' | 'copy' | 'retry' | 'delete';
  */
 export function getMessageActions(message: Message): MessageAction[] {
   if (message.type === 'system') return [];
-  if (message.type === 'user' && message.status === 'failed') {
-    return ['retry', 'copy', 'delete'];
-  }
-  return ['reply', 'copy', 'delete'];
+  const first: MessageAction =
+    message.type === 'user' && message.status === 'failed' ? 'retry' : 'reply';
+  // A cards-only AI message has no text to copy.
+  return message.text ? [first, 'copy', 'delete'] : [first, 'delete'];
 }

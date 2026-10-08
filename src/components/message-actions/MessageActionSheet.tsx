@@ -22,7 +22,7 @@ import {
   getMessageActions,
   type MessageAction,
 } from '../../utils/getMessageActions';
-import { senderName } from '../../utils/senderName';
+import { previewText, senderName } from '../../utils/senderName';
 import type { Message } from '../../types/message';
 
 const ACTION_LABELS: Record<MessageAction, { icon: string; label: string }> = {
@@ -99,7 +99,7 @@ export function MessageActionSheet() {
                 {senderName(shown)}
               </Text>
               <Text className="text-sm text-foreground" numberOfLines={3}>
-                {shown.text}
+                {previewText(shown)}
               </Text>
             </View>
             {getMessageActions(shown).map(action => (

@@ -13,3 +13,13 @@ export function senderName(message: Message): string {
       return 'System';
   }
 }
+
+/** One-line text for previews and quotes. A cards-only AI message has no text. */
+export function previewText(message: Message): string {
+  if (message.text) return message.text;
+  if (message.type === 'ai') {
+    const count = message.recommendations.length;
+    return `${count} recommendation${count === 1 ? '' : 's'}`;
+  }
+  return '';
+}

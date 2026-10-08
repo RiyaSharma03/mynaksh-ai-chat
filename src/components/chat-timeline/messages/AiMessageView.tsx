@@ -13,14 +13,16 @@ export function AiMessageView({
   return (
     <>
       {group.isFirstInGroup && <SenderLabel icon="✨" name="AI Astrologer" />}
-      <MessageBubble
-        messageId={message.id}
-        side="start"
-        {...group}
-        className="border border-border bg-surface"
-      >
-        <MessageText text={message.text} className="text-foreground" />
-      </MessageBubble>
+      {message.text ? (
+        <MessageBubble
+          messageId={message.id}
+          side="start"
+          {...group}
+          className="border border-border bg-surface"
+        >
+          <MessageText text={message.text} className="text-foreground" />
+        </MessageBubble>
+      ) : null}
       {message.recommendations.length > 0 && (
         <RecommendationCarousel recommendations={message.recommendations} />
       )}

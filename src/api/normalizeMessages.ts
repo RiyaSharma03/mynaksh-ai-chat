@@ -36,11 +36,13 @@ export function normalizeMessages(wire: WireMessage[]): Message[] {
 }
 
 function normalizeMessage(wire: WireMessage): Message | null {
-  if (!wire.id || !wire.text) return null;
+  if (!wire.id) return null;
+  // Only an AI message may skip text (a cards-only turn); it is checked below.
+  if (!wire.text && wire.type !== 'ai') return null;
 
   const base = {
     id: wire.id,
-    text: wire.text,
+    text: wire.text ?? '',
     createdAt: wire.createdAt ? Date.parse(wire.createdAt) : Date.now(),
     replyToId: wire.replyToId,
   };
@@ -48,15 +50,19 @@ function normalizeMessage(wire: WireMessage): Message | null {
   switch (wire.type) {
     case 'user':
       return { ...base, type: 'user', status: 'sent' };
-    case 'ai':
+    case 'ai': {
+      const recommendations = (wire.recommendations ?? []).flatMap(
+        normalizeRecommendation,
+      );
+      // Cards without text is a valid answer; no text and no cards is not.
+      if (!base.text && recommendations.length === 0) return null;
       return {
         ...base,
         type: 'ai',
-        recommendations: (wire.recommendations ?? []).flatMap(
-          normalizeRecommendation,
-        ),
+        recommendations,
         feedback: { rating: null, reasons: [] },
       };
+    }
     case 'human':
       return {
         ...base,
