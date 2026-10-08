@@ -18,9 +18,8 @@ export const consultation: RecommendationDefinition = {
       </Text>
     </View>
   ),
-  onPress: (recommendation, { showAlert }) =>
-    showAlert(
-      recommendation.title,
-      'Connecting you with an available astrologer…',
-    ),
+  // Starts a real handoff: the message goes through the normal send flow,
+  // and the backend connects an astrologer.
+  onPress: (_recommendation, { sendMessage }) =>
+    sendMessage("I'd like to talk to an astrologer."),
 };

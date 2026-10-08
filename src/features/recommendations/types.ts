@@ -19,6 +19,8 @@ export interface Recommendation {
 /** What a card may do when pressed. Injected, so definitions stay plain data + functions. */
 export interface RecommendationActions {
   showAlert(title: string, message?: string): void;
+  /** Sends a chat message on the user's behalf, e.g. to start a consultation. */
+  sendMessage(text: string): void;
 }
 
 /**

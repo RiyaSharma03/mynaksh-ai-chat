@@ -1,5 +1,7 @@
 import { useMemo } from 'react';
 import { Alert } from 'react-native';
+import { useAppDispatch } from '../../store/hooks';
+import { sendMessage } from '../chat/conversationSlice';
 import type { RecommendationActions } from './types';
 
 /**
@@ -7,10 +9,12 @@ import type { RecommendationActions } from './types';
  * call, add to cart) are added here once and every definition can use them.
  */
 export function useRecommendationActions(): RecommendationActions {
+  const dispatch = useAppDispatch();
   return useMemo(
     () => ({
       showAlert: (title, message) => Alert.alert(title, message),
+      sendMessage: text => dispatch(sendMessage(text)),
     }),
-    [],
+    [dispatch],
   );
 }
