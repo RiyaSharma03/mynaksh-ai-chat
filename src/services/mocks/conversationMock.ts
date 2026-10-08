@@ -1,58 +1,58 @@
 import type { ConversationService } from '../conversationService';
 import { normalizeMessages } from '../utils/normalizeMessages';
-import { pickAiReply } from './data/aiReplies';
-import { ASTROLOGER, astrologerReplies } from './data/astrologerReplies';
-import { initialMessages } from './data/initialMessages';
-import {
-  AI_THINKING_MS,
-  HUMAN_TYPING_MS,
-  mockClient,
-  mockScenario,
-} from './mockClient';
+import { initialMessages } from './initialMessages';
+import { ASTROLOGER, astrologerReplies, pickAiReply } from './replies';
 
-/** Mentioning any of these hands the chat over to a human astrologer. */
-const HANDOFF_PATTERN = /astrologer|human|expert|real person/i;
+/** Demo switch for the loading, empty and error states (set from the header menu). */
+export const mockScenario = {
+  /** 'error' fails the next load only, so Retry recovers. */
+  load: 'normal' as 'normal' | 'empty' | 'error',
+};
 
-/**
- * The mock backend: same methods and style as apiConversationService, with
- * mockClient in place of apiClient. Every response goes through
- * normalizeMessages, like the real API's.
- */
+/** Pretends to be the network. */
+const delay = (ms = 800) =>
+  new Promise<void>(resolve => setTimeout(resolve, ms));
+
+/** The fake backend: same methods as the real API, with data from this folder. */
 export const mockConversationService: ConversationService = {
   async fetchConversation() {
+    await delay();
     if (mockScenario.load === 'error') {
       mockScenario.load = 'normal';
-      return mockClient.fail('Unable to load conversation.');
+      throw new Error('Unable to load conversation.');
     }
-    const messages = mockScenario.load === 'empty' ? [] : initialMessages;
-    return normalizeMessages(await mockClient.respond(messages));
+    if (mockScenario.load === 'empty') return [];
+    return normalizeMessages(initialMessages);
   },
 
   // Text containing "fail" fails, to demo the retry flow.
   async sendMessage({ text }) {
-    if (/fail/i.test(text)) return mockClient.fail('Failed to send.');
-    return mockClient.respond({ createdAt: Date.now() });
+    await delay();
+    if (/fail/i.test(text)) throw new Error('Failed to send.');
+    return { createdAt: Date.now() };
   },
 
-  // An astrologer answers if asked for; otherwise the AI does.
+  // Asking for an astrologer gets a human; anything else gets the AI.
   async getReplies({ messageId, text }, { onTyping }) {
-    if (HANDOFF_PATTERN.test(text)) {
+    if (/astrologer|human|expert/i.test(text)) {
       onTyping({ type: 'human', name: ASTROLOGER.name });
-      return normalizeMessages(
-        await mockClient.respond(astrologerReplies(messageId), HUMAN_TYPING_MS),
-      );
+      await delay(3000);
+      return normalizeMessages(astrologerReplies(messageId));
     }
+
     onTyping({ type: 'ai' });
-    const reply = {
-      ...pickAiReply(text),
-      id: `ai-${messageId}`,
-      type: 'ai',
-      createdAt: new Date().toISOString(),
-    };
-    return normalizeMessages(await mockClient.respond([reply], AI_THINKING_MS));
+    await delay(1500);
+    return normalizeMessages([
+      {
+        ...pickAiReply(text),
+        id: `ai-${messageId}`,
+        type: 'ai',
+        createdAt: new Date().toISOString(),
+      },
+    ]);
   },
 
   async submitFeedback() {
-    await mockClient.respond(undefined, 300);
+    await delay(300);
   },
 };
