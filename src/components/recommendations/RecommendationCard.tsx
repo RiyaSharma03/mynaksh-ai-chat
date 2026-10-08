@@ -1,8 +1,12 @@
 import { memo } from 'react';
-import { Pressable, Text, View } from 'react-native';
-import { getRecommendationDefinition } from './recommendationRegistry';
-import type { Recommendation } from '../../types/recommendation';
-import { useRecommendationActions } from './useRecommendationActions';
+import { Alert, Pressable, Text, View } from 'react-native';
+import { getRecommendationDefinition } from '../../constants/recommendationTypes';
+import { useAppDispatch } from '../../store/hooks';
+import { sendMessage } from '../../store/slices/conversationSlice';
+import type {
+  Recommendation,
+  RecommendationActions,
+} from '../../types/recommendation';
 
 export const CARD_WIDTH = 208;
 
@@ -16,8 +20,14 @@ function RecommendationCardView({
 }: {
   recommendation: Recommendation;
 }) {
+  const dispatch = useAppDispatch();
   const definition = getRecommendationDefinition(recommendation.type);
-  const actions = useRecommendationActions();
+
+  // What a definition's onPress is allowed to do.
+  const actions: RecommendationActions = {
+    showAlert: (title, message) => Alert.alert(title, message),
+    sendMessage: text => dispatch(sendMessage(text)),
+  };
   const { accent, Body } = definition;
 
   const onPress = () =>

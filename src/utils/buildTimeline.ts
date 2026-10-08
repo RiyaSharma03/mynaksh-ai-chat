@@ -1,5 +1,5 @@
-import { formatDayLabel, startOfDay } from '../../utils/date';
-import type { Message, MessageType } from '../../types/message';
+import { formatDayLabel, startOfDay } from './date';
+import type { Message, MessageType } from '../types/message';
 
 /**
  * What the list renders: rows, not messages. Date separators and grouping

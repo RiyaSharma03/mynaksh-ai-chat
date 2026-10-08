@@ -18,7 +18,10 @@ import {
   replyStarted,
   selectSelectedMessage,
 } from '../../store/slices/conversationSlice';
-import { getMessageActions, type MessageAction } from './getMessageActions';
+import {
+  getMessageActions,
+  type MessageAction,
+} from '../../utils/getMessageActions';
 import { senderName } from '../../utils/senderName';
 import type { Message } from '../../types/message';
 

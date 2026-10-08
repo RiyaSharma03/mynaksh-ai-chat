@@ -4,6 +4,7 @@ import {
   feedbackRated,
   feedbackReasonToggled,
   loadConversation,
+  saveFeedback,
   selectMessageById,
 } from '../src/store/slices/conversationSlice';
 
@@ -16,9 +17,6 @@ jest.mock('../src/api/conversationApi', () => ({
   },
 }));
 const api = conversationApi as jest.Mocked<typeof conversationApi>;
-
-const wait = (ms: number) =>
-  new Promise<void>(resolve => setTimeout(resolve, ms));
 
 async function storeWithAiMessage() {
   api.fetchConversation.mockResolvedValue([
@@ -77,21 +75,17 @@ it('ignores reasons unless the message is disliked', async () => {
   expect(feedback()?.reasons).toEqual([]);
 });
 
-it('syncs to the server once, with the final state, after rapid changes', async () => {
+it('saves the current feedback to the backend', async () => {
   const { store } = await storeWithAiMessage();
   store.dispatch(feedbackRated({ messageId: 'ai', rating: 'dislike' }));
   store.dispatch(
     feedbackReasonToggled({ messageId: 'ai', reason: 'too_generic' }),
   );
-  store.dispatch(
-    feedbackReasonToggled({ messageId: 'ai', reason: 'didnt_help' }),
-  );
-  expect(api.submitFeedback).not.toHaveBeenCalled();
 
-  await wait(700);
-  expect(api.submitFeedback).toHaveBeenCalledTimes(1);
+  await store.dispatch(saveFeedback('ai'));
+
   expect(api.submitFeedback).toHaveBeenCalledWith({
     messageId: 'ai',
-    feedback: { rating: 'dislike', reasons: ['too_generic', 'didnt_help'] },
+    feedback: { rating: 'dislike', reasons: ['too_generic'] },
   });
 });

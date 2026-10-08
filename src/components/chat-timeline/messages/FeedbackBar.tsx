@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import {
   feedbackRated,
   feedbackReasonToggled,
+  saveFeedback,
   selectMessageById,
 } from '../../../store/slices/conversationSlice';
 import { FEEDBACK_REASONS, type FeedbackReason } from '../../../types/feedback';
@@ -29,8 +30,15 @@ export function FeedbackBar({ messageId }: { messageId: string }) {
   });
   if (!feedback) return null;
 
-  const rate = (rating: 'like' | 'dislike') =>
+  // Update the UI first, then save the new feedback.
+  const rate = (rating: 'like' | 'dislike') => {
     dispatch(feedbackRated({ messageId, rating }));
+    dispatch(saveFeedback(messageId));
+  };
+  const toggleReason = (reason: FeedbackReason) => {
+    dispatch(feedbackReasonToggled({ messageId, reason }));
+    dispatch(saveFeedback(messageId));
+  };
 
   return (
     <View className="mt-2 gap-2">
@@ -68,9 +76,7 @@ export function FeedbackBar({ messageId }: { messageId: string }) {
                 key={reason}
                 label={label}
                 selected={feedback.reasons.includes(reason)}
-                onPress={() =>
-                  dispatch(feedbackReasonToggled({ messageId, reason }))
-                }
+                onPress={() => toggleReason(reason)}
               />
             ))}
           </View>

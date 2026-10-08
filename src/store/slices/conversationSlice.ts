@@ -1,5 +1,6 @@
 import {
   createEntityAdapter,
+  createSelector,
   createSlice,
   isAnyOf,
   nanoid,
@@ -11,6 +12,7 @@ import type { FeedbackReason } from '../../types/feedback';
 import type { RootState } from '..';
 import { createAppAsyncThunk } from '../hooks';
 import type { Message, UserMessage } from '../../types/message';
+import { buildTimeline } from '../../utils/buildTimeline';
 
 /**
  * Messages are normalized (ids + entities) by RTK's entity adapter and kept
@@ -102,6 +104,19 @@ export const sendMessage = createAppAsyncThunk(
     dispatch(messageAdded(message));
     dispatch(replyCancelled());
     await dispatch(deliverMessage(message.id));
+  },
+);
+
+/** Saves an AI message's current feedback to the backend (after the UI has updated). */
+export const saveFeedback = createAppAsyncThunk(
+  'conversation/saveFeedback',
+  async (messageId: string, { getState }) => {
+    const message = getState().conversation.entities[messageId];
+    if (message?.type !== 'ai') return;
+    await conversationApi.submitFeedback({
+      messageId,
+      feedback: message.feedback,
+    });
   },
 );
 
@@ -241,3 +256,8 @@ export const selectReplyTarget = (state: RootState) => {
   const id = state.conversation.replyToId;
   return id ? state.conversation.entities[id] : undefined;
 };
+
+/** List rows (date separators + grouping). Memoized: recomputed only when messages change. */
+export const selectTimeline = createSelector([selectAllMessages], messages =>
+  buildTimeline(messages),
+);

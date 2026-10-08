@@ -5,9 +5,11 @@ import {
   type ListRenderItemInfo,
 } from '@shopify/flash-list';
 import { useAppSelector } from '../../store/hooks';
-import { selectTypingSender } from '../../store/slices/conversationSlice';
-import type { TimelineItem } from './buildTimeline';
-import { selectTimeline } from './selectTimeline';
+import {
+  selectTimeline,
+  selectTypingSender,
+} from '../../store/slices/conversationSlice';
+import type { TimelineItem } from '../../utils/buildTimeline';
 import { KeyboardAwareChatScroll } from './KeyboardAwareChatScroll';
 import { LabelDivider } from '../common/LabelDivider';
 import { MessageRow } from './MessageRow';
