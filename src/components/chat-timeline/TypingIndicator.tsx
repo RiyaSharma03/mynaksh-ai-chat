@@ -1,6 +1,6 @@
 import { View } from 'react-native';
-import { SenderLabel } from '../common/SenderLabel';
-import { TypingDots } from '../common/TypingDots';
+import { SenderLabel } from '../ui/SenderLabel';
+import { TypingDots } from '../ui/TypingDots';
 import { useAppSelector } from '../../store/hooks';
 import { selectTypingSender } from '../../store/slices/conversationSlice';
 

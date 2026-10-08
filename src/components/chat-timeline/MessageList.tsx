@@ -11,7 +11,7 @@ import {
 } from '../../store/slices/conversationSlice';
 import type { TimelineItem } from '../../utils/buildTimeline';
 import { KeyboardAwareChatScroll } from './KeyboardAwareChatScroll';
-import { LabelDivider } from '../common/LabelDivider';
+import { LabelDivider } from '../ui/LabelDivider';
 import { MessageRow } from './MessageRow';
 import { TypingIndicator } from './TypingIndicator';
 

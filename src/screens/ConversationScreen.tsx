@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenMessage } from '../components/common/ScreenMessage';
+import { ScreenMessage } from '../components/ui/ScreenMessage';
 import { Composer } from '../components/composer/Composer';
 import { MessageActionSheet } from '../components/message-actions/MessageActionSheet';
 import { MessageList } from '../components/chat-timeline/MessageList';

@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { CardDetail } from '../components/common/CardDetail';
+import { CardDetail } from '../components/ui/CardDetail';
 import type {
   Recommendation,
   RecommendationDefinition,
