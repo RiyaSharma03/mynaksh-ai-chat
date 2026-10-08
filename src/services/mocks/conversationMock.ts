@@ -1,7 +1,7 @@
 import type { ConversationService } from '../conversationService';
 import { normalizeMessages } from '../utils/normalizeMessages';
-import { initialMessages } from './initialMessages';
-import { ASTROLOGER, astrologerReplies, pickAiReply } from './replies';
+import { initialMessages } from './data/initialMessages';
+import { ASTROLOGER, astrologerReplies, pickAiReply } from './data/replies';
 
 /** Demo switch for the loading, empty and error states (set from the header menu). */
 export const mockScenario = {
