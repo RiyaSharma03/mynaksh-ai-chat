@@ -1,6 +1,6 @@
-import { apiConversationService } from '../api/conversationApi';
+import { apiConversationService } from './api/conversationApi';
 import { USE_MOCK_API } from '../config/env';
-import { mockConversationService } from '../mocks/handlers/conversationHandlers';
+import { mockConversationService } from './mocks/handlers/conversationHandlers';
 import type { Feedback } from '../types/feedback';
 import type { Message } from '../types/message';
 

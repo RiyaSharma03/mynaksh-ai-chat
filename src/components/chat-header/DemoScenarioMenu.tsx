@@ -1,6 +1,6 @@
 import { ActionSheetIOS, Alert, Platform } from 'react-native';
 import { IconButton } from '../ui/IconButton';
-import { mockScenario } from '../../mocks/handlers/conversationHandlers';
+import { mockScenario } from '../../services/mocks/handlers/conversationHandlers';
 import { useAppDispatch } from '../../store/hooks';
 import { loadConversation } from '../../store/slices/conversationSlice';
 

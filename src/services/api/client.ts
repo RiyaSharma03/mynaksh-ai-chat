@@ -1,4 +1,4 @@
-import { API_BASE_URL } from '../config/env';
+import { API_BASE_URL } from '../../config/env';
 
 /** Sends a JSON request to the backend and returns the parsed response. */
 async function request<T>(
