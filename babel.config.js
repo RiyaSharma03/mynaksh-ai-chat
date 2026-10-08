@@ -1,5 +1,5 @@
 module.exports = {
-  presets: ['module:@react-native/babel-preset'],
-  // Must be listed last: compiles Reanimated worklets to run on the UI thread.
-  plugins: ['react-native-worklets/plugin'],
+  // nativewind/babel turns `className` into styles and also adds the
+  // Reanimated/Worklets plugin, so it isn't listed separately here.
+  presets: ['module:@react-native/babel-preset', 'nativewind/babel'],
 };
