@@ -32,8 +32,7 @@ export function IncomingMessage({
       {/* An AI message can be cards only, with no text. */}
       {message.text ? (
         <MessageBubble
-          messageId={message.id}
-          text={message.text}
+          message={message}
           tone={isAi ? 'ai' : 'astrologer'}
           {...group}
         />

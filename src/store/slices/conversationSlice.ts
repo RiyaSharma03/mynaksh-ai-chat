@@ -2,7 +2,6 @@ import {
   createEntityAdapter,
   createSelector,
   createSlice,
-  isAnyOf,
   nanoid,
   type PayloadAction,
 } from '@reduxjs/toolkit';
@@ -29,25 +28,14 @@ type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 const initialState = messagesAdapter.getInitialState({
   loadStatus: 'idle' as LoadStatus,
-  /**
-   * Who is typing a reply, keyed by the user message being answered. A map,
-   * so overlapping replies each clear only their own entry.
-   */
-  typing: {} as Record<string, TypingSender>,
-  /** The long-pressed message whose action sheet is open. */
-  selectedMessageId: null as string | null,
+  /** Who is typing a reply right now (the AI or an astrologer), if anyone. */
+  typingSender: null as TypingSender | null,
   /** The message the composer is replying to. */
   replyToId: null as string | null,
 });
 
-export const loadConversation = createAppAsyncThunk(
-  'conversation/load',
-  () => conversationService.fetchConversation(),
-  {
-    // Ignore a second load (e.g. a double-tapped Retry) while one is in flight.
-    condition: (_, { getState }) =>
-      getState().conversation.loadStatus !== 'loading',
-  },
+export const loadConversation = createAppAsyncThunk('conversation/load', () =>
+  conversationService.fetchConversation(),
 );
 
 /**
@@ -71,19 +59,14 @@ export const deliverMessage = createAppAsyncThunk(
   },
 );
 
-/**
- * Asks the backend for the answer to a delivered message. Whoever answers
- * (AI or astrologer), each reply enters through messageReceived, the same
- * action a socket push would use.
- */
+/** Asks the backend for the answer to a delivered message (from the AI or an astrologer). */
 const requestReplies = createAppAsyncThunk(
   'conversation/replies',
   async (input: { messageId: string; text: string }, { dispatch }) => {
     const replies = await conversationService.getReplies(input, {
-      onTyping: sender =>
-        dispatch(typingChanged({ messageId: input.messageId, sender })),
+      onTyping: sender => dispatch(typingChanged(sender)),
     });
-    replies.forEach(reply => dispatch(messageReceived(reply)));
+    replies.forEach(reply => dispatch(messageAdded(reply)));
   },
 );
 
@@ -136,14 +119,10 @@ const conversationSlice = createSlice({
   name: 'conversation',
   initialState,
   reducers: {
-    messageAdded: messagesAdapter.addOne,
-    /** Any incoming message, from any sender: the single entry point for replies. */
-    messageReceived: messagesAdapter.upsertOne,
-    typingChanged(
-      state,
-      action: PayloadAction<{ messageId: string; sender: TypingSender }>,
-    ) {
-      state.typing[action.payload.messageId] = action.payload.sender;
+    /** Adds a message (sent or received); a repeated id replaces the old copy. */
+    messageAdded: messagesAdapter.upsertOne,
+    typingChanged(state, action: PayloadAction<TypingSender>) {
+      state.typingSender = action.payload;
     },
     /**
      * Delete. The entity adapter removes it from ids + entities; FlashList's
@@ -152,11 +131,6 @@ const conversationSlice = createSlice({
     messageRemoved(state, action: PayloadAction<string>) {
       messagesAdapter.removeOne(state, action.payload);
       if (state.replyToId === action.payload) state.replyToId = null;
-      if (state.selectedMessageId === action.payload)
-        state.selectedMessageId = null;
-    },
-    messageSelected(state, action: PayloadAction<string | null>) {
-      state.selectedMessageId = action.payload;
     },
     replyStarted(state, action: PayloadAction<string>) {
       state.replyToId = action.payload;
@@ -213,22 +187,20 @@ const conversationSlice = createSlice({
       .addCase(deliverMessage.rejected, (state, action) => {
         setStatus(state, action.meta.arg, 'failed');
       })
-      .addMatcher(
-        isAnyOf(requestReplies.fulfilled, requestReplies.rejected),
-        (state, action) => {
-          delete state.typing[action.meta.arg.messageId];
-        },
-      );
+      .addCase(requestReplies.fulfilled, state => {
+        state.typingSender = null;
+      })
+      .addCase(requestReplies.rejected, state => {
+        state.typingSender = null;
+      });
   },
 });
 
 export const conversationReducer = conversationSlice.reducer;
-const { messageAdded, messageReceived, typingChanged } =
-  conversationSlice.actions;
+const { messageAdded, typingChanged } = conversationSlice.actions;
 
 export const {
   messageRemoved,
-  messageSelected,
   replyStarted,
   replyCancelled,
   feedbackRated,
@@ -244,15 +216,8 @@ export const {
 export const selectLoadStatus = (state: RootState) =>
   state.conversation.loadStatus;
 
-/** Whoever is typing a reply right now, if anyone (the first, if several). */
-export const selectTypingSender = (
-  state: RootState,
-): TypingSender | undefined => Object.values(state.conversation.typing)[0];
-
-export const selectSelectedMessage = (state: RootState) => {
-  const id = state.conversation.selectedMessageId;
-  return id ? state.conversation.entities[id] : undefined;
-};
+export const selectTypingSender = (state: RootState) =>
+  state.conversation.typingSender;
 
 export const selectReplyTarget = (state: RootState) => {
   const id = state.conversation.replyToId;

@@ -2,7 +2,6 @@ import '../../global.css';
 import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { DarkTheme, NavigationContainer } from '@react-navigation/native';
@@ -30,12 +29,10 @@ export default function App() {
       <GestureHandlerRootView className="flex-1">
         <SafeAreaProvider>
           <KeyboardProvider>
-            <BottomSheetModalProvider>
-              <StatusBar barStyle="light-content" />
-              <NavigationContainer theme={navigationTheme}>
-                <RootNavigator />
-              </NavigationContainer>
-            </BottomSheetModalProvider>
+            <StatusBar barStyle="light-content" />
+            <NavigationContainer theme={navigationTheme}>
+              <RootNavigator />
+            </NavigationContainer>
           </KeyboardProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>

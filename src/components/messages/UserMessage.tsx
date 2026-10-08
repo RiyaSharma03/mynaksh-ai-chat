@@ -19,8 +19,7 @@ export function UserMessage({
   return (
     <>
       <MessageBubble
-        messageId={message.id}
-        text={message.text}
+        message={message}
         tone="user"
         dimmed={message.status === 'sending'}
         {...group}

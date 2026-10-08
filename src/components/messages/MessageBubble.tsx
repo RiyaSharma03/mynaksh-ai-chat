@@ -1,8 +1,21 @@
 import type { ReactNode } from 'react';
 import { Keyboard, Pressable, Text } from 'react-native';
+import Clipboard from '@react-native-clipboard/clipboard';
 import { useAppDispatch } from '../../store/hooks';
-import { messageSelected } from '../../store/slices/conversationSlice';
+import {
+  deliverMessage,
+  messageRemoved,
+  replyStarted,
+} from '../../store/slices/conversationSlice';
+import type { Message } from '../../types/message';
 import { cn } from '../../utils/cn';
+import {
+  getMessageActions,
+  type MessageAction,
+  previewText,
+  senderName,
+} from '../../utils/message';
+import { showOptions } from '../../utils/showOptions';
 
 export interface GroupPosition {
   isFirstInGroup: boolean;
@@ -18,9 +31,15 @@ const TONES = {
   },
 };
 
+const ACTION_LABELS: Record<MessageAction, string> = {
+  reply: 'Reply',
+  copy: 'Copy',
+  retry: 'Retry',
+  delete: 'Delete',
+};
+
 interface MessageBubbleProps extends GroupPosition {
-  messageId: string;
-  text: string;
+  message: Message;
   tone: keyof typeof TONES;
   dimmed?: boolean;
   /** Shown above the text, e.g. a quoted reply. */
@@ -30,11 +49,10 @@ interface MessageBubbleProps extends GroupPosition {
 /**
  * The chat bubble: alignment, colours, grouped corners and long-press.
  * Corners touching a neighbour in the same group are tighter, so a group
- * reads as one block. Long-press selects the message; the action sheet opens.
+ * reads as one block. Long-press opens Reply / Copy / Delete.
  */
 export function MessageBubble({
-  messageId,
-  text,
+  message,
   tone,
   dimmed,
   isFirstInGroup,
@@ -44,9 +62,24 @@ export function MessageBubble({
   const dispatch = useAppDispatch();
   const isMine = tone === 'user';
 
+  const runAction: Record<MessageAction, () => void> = {
+    reply: () => dispatch(replyStarted(message.id)),
+    copy: () => Clipboard.setString(message.text),
+    retry: () => dispatch(deliverMessage(message.id)),
+    delete: () => dispatch(messageRemoved(message.id)),
+  };
+
   const onLongPress = () => {
     Keyboard.dismiss();
-    dispatch(messageSelected(messageId));
+    showOptions(
+      senderName(message),
+      previewText(message),
+      getMessageActions(message).map(action => ({
+        label: ACTION_LABELS[action],
+        destructive: action === 'delete',
+        onPress: runAction[action],
+      })),
+    );
   };
 
   return (
@@ -65,7 +98,7 @@ export function MessageBubble({
     >
       {children}
       <Text className={cn('text-[15px] leading-[21px]', TONES[tone].text)}>
-        {text}
+        {message.text}
       </Text>
     </Pressable>
   );

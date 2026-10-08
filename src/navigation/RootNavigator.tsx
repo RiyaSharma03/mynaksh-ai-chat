@@ -1,7 +1,11 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { DemoScenarioMenu } from '../components/chat-header/DemoScenarioMenu';
 import { ConversationScreen } from '../screens/ConversationScreen';
-import type { RootStackParamList } from './types';
+
+/** Screens and their params (none here). */
+type RootStackParamList = {
+  Conversation: undefined;
+};
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

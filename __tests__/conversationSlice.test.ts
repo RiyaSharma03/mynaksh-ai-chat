@@ -9,11 +9,9 @@ import {
   deliverMessage,
   loadConversation,
   messageRemoved,
-  messageSelected,
   replyStarted,
   selectAllMessages,
   selectReplyTarget,
-  selectSelectedMessage,
   selectTypingSender,
   selectLoadStatus,
   sendMessage,
@@ -76,17 +74,6 @@ it('goes to error, then Retry recovers', async () => {
   expect(selectLoadStatus(store.getState())).toBe('ready');
 });
 
-it('ignores a second load while one is in flight', async () => {
-  fetchConversation.mockResolvedValue([]);
-  const store = makeStore();
-
-  await Promise.all([
-    store.dispatch(loadConversation()),
-    store.dispatch(loadConversation()),
-  ]);
-  expect(fetchConversation).toHaveBeenCalledTimes(1);
-});
-
 const userMessages = (store: ReturnType<typeof makeStore>) =>
   selectAllMessages(store.getState()).flatMap(m =>
     m.type === 'user' ? [m] : [],
@@ -133,7 +120,7 @@ describe('sending', () => {
       },
     ]);
     await flush();
-    expect(selectTypingSender(store.getState())).toBeUndefined();
+    expect(selectTypingSender(store.getState())).toBeNull();
     expect(selectAllMessages(store.getState()).map(m => m.type)).toEqual([
       'user',
       'ai',
@@ -163,7 +150,7 @@ describe('sending', () => {
       },
     ]);
     await flush();
-    expect(selectTypingSender(store.getState())).toBeUndefined();
+    expect(selectTypingSender(store.getState())).toBeNull();
     expect(selectAllMessages(store.getState()).map(m => m.type)).toEqual([
       'user',
       'system',
@@ -197,16 +184,14 @@ describe('actions', () => {
     return store;
   };
 
-  it('delete removes the message and clears a reply or selection pointing at it', async () => {
+  it('delete removes the message and clears a reply pointing at it', async () => {
     const store = await loadedStore();
     store.dispatch(replyStarted('a'));
-    store.dispatch(messageSelected('a'));
 
     store.dispatch(messageRemoved('a'));
 
     expect(selectAllMessages(store.getState()).map(m => m.id)).toEqual(['b']);
     expect(selectReplyTarget(store.getState())).toBeUndefined();
-    expect(selectSelectedMessage(store.getState())).toBeUndefined();
   });
 
   it('a sent reply carries replyToId, and the reply bar clears', async () => {
