@@ -6,8 +6,10 @@ import {
   nanoid,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import { conversationApi } from '../../api/conversationApi';
-import type { TypingSender } from '../../api/conversationApi';
+import {
+  conversationService,
+  type TypingSender,
+} from '../../services/conversationService';
 import type { FeedbackReason } from '../../types/feedback';
 import type { RootState } from '..';
 import { createAppAsyncThunk } from '../hooks';
@@ -40,7 +42,7 @@ const initialState = messagesAdapter.getInitialState({
 
 export const loadConversation = createAppAsyncThunk(
   'conversation/load',
-  () => conversationApi.fetchConversation(),
+  () => conversationService.fetchConversation(),
   {
     // Ignore a second load (e.g. a double-tapped Retry) while one is in flight.
     condition: (_, { getState }) =>
@@ -59,7 +61,7 @@ export const deliverMessage = createAppAsyncThunk(
     const message = getState().conversation.entities[id];
     if (message?.type !== 'user') throw new Error('Message no longer exists');
 
-    const result = await conversationApi.sendMessage({
+    const result = await conversationService.sendMessage({
       id,
       text: message.text,
       replyToId: message.replyToId,
@@ -77,7 +79,7 @@ export const deliverMessage = createAppAsyncThunk(
 const requestReplies = createAppAsyncThunk(
   'conversation/replies',
   async (input: { messageId: string; text: string }, { dispatch }) => {
-    const replies = await conversationApi.getReplies(input, {
+    const replies = await conversationService.getReplies(input, {
       onTyping: sender =>
         dispatch(typingChanged({ messageId: input.messageId, sender })),
     });
@@ -113,7 +115,7 @@ export const saveFeedback = createAppAsyncThunk(
   async (messageId: string, { getState }) => {
     const message = getState().conversation.entities[messageId];
     if (message?.type !== 'ai') return;
-    await conversationApi.submitFeedback({
+    await conversationService.submitFeedback({
       messageId,
       feedback: message.feedback,
     });

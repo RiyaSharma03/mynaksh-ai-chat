@@ -1,5 +1,5 @@
 import { normalizeMessages } from '../src/api/normalizeMessages';
-import { initialMessages } from '../src/api/mock/initialMessages';
+import { initialMessages } from '../src/mocks/data/initialMessages';
 
 describe('normalizeMessages', () => {
   it('turns the mock payload into typed messages with defaults', () => {

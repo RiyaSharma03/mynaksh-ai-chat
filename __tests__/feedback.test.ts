@@ -1,4 +1,4 @@
-import { conversationApi } from '../src/api/conversationApi';
+import { conversationService } from '../src/services/conversationService';
 import { makeStore } from '../src/store';
 import {
   feedbackRated,
@@ -8,15 +8,15 @@ import {
   selectMessageById,
 } from '../src/store/slices/conversationSlice';
 
-jest.mock('../src/api/conversationApi', () => ({
-  conversationApi: {
+jest.mock('../src/services/conversationService', () => ({
+  conversationService: {
     fetchConversation: jest.fn(),
     sendMessage: jest.fn(),
     getReplies: jest.fn(),
     submitFeedback: jest.fn(),
   },
 }));
-const api = conversationApi as jest.Mocked<typeof conversationApi>;
+const api = conversationService as jest.Mocked<typeof conversationService>;
 
 async function storeWithAiMessage() {
   api.fetchConversation.mockResolvedValue([

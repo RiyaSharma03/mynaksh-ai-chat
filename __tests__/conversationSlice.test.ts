@@ -1,6 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { conversationApi } from '../src/api/conversationApi';
-import type { TypingSender } from '../src/api/conversationApi';
+import {
+  conversationService,
+  type TypingSender,
+} from '../src/services/conversationService';
 import type { Message } from '../src/types/message';
 import {
   conversationReducer,
@@ -17,16 +19,16 @@ import {
   sendMessage,
 } from '../src/store/slices/conversationSlice';
 
-jest.mock('../src/api/conversationApi', () => ({
-  conversationApi: {
+jest.mock('../src/services/conversationService', () => ({
+  conversationService: {
     fetchConversation: jest.fn(),
     sendMessage: jest.fn(),
     getReplies: jest.fn(),
   },
 }));
-const fetchConversation = conversationApi.fetchConversation as jest.Mock;
-const sendMessageApi = conversationApi.sendMessage as jest.Mock;
-const getReplies = conversationApi.getReplies as jest.Mock;
+const fetchConversation = conversationService.fetchConversation as jest.Mock;
+const sendMessageApi = conversationService.sendMessage as jest.Mock;
+const getReplies = conversationService.getReplies as jest.Mock;
 
 const makeStore = () =>
   configureStore({ reducer: { conversation: conversationReducer } });

@@ -1,4 +1,4 @@
-import type { WireMessage } from '../normalizeMessages';
+import type { WireMessage } from '../../api/normalizeMessages';
 
 type Reply = Pick<WireMessage, 'text' | 'recommendations'>;
 

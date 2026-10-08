@@ -1,7 +1,7 @@
-import type { ConversationApi } from '../conversationApi';
-import { normalizeMessages } from '../normalizeMessages';
-import { pickAiReply } from './aiReplies';
-import { initialMessages } from './initialMessages';
+import { normalizeMessages } from '../../api/normalizeMessages';
+import type { ConversationService } from '../../services/conversationService';
+import { pickAiReply } from '../data/aiReplies';
+import { initialMessages } from '../data/initialMessages';
 
 const LATENCY_MS = 800;
 const AI_THINKING_MS = 1500;
@@ -23,7 +23,7 @@ const delay = (ms: number) =>
  * An in-memory stand-in for the backend: same contract, fake latency.
  * Data goes through normalizeMessages, as a real server response would.
  */
-export const conversationMock: ConversationApi = {
+export const mockConversationService: ConversationService = {
   async fetchConversation() {
     await delay(LATENCY_MS);
     if (mockScenario.load === 'error') {
