@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
   DarkTheme,
@@ -22,9 +23,11 @@ export default function App() {
     <Provider store={store}>
       <GestureHandlerRootView className="flex-1">
         <SafeAreaProvider>
-          <ThemeProvider>
-            <ThemedNavigation />
-          </ThemeProvider>
+          <KeyboardProvider>
+            <ThemeProvider>
+              <ThemedNavigation />
+            </ThemeProvider>
+          </KeyboardProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
     </Provider>

@@ -29,6 +29,8 @@ export interface WireMessage {
 export interface ConversationApi {
   fetchConversation(): Promise<Message[]>;
   sendMessage(input: SendMessageInput): Promise<{ createdAt: number }>;
+  /** The AI's answer to a delivered user message. */
+  getAiReply(input: { messageId: string; text: string }): Promise<Message>;
 }
 
 export interface SendMessageInput {

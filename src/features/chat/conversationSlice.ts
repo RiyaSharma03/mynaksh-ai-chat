@@ -2,12 +2,13 @@ import {
   createEntityAdapter,
   createSelector,
   createSlice,
+  nanoid,
 } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api';
 import type { RootState } from '../../store';
 import { createAppAsyncThunk } from '../../store/hooks';
 import { buildTimeline } from './timeline';
-import type { Message } from './types';
+import type { Message, UserMessage } from './types';
 
 /**
  * Messages are normalized (ids + entities) by RTK's entity adapter and kept
@@ -23,6 +24,8 @@ type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 const initialState = messagesAdapter.getInitialState({
   loadStatus: 'idle' as LoadStatus,
   loadError: null as string | null,
+  /** AI replies in flight; > 0 shows the typing indicator. */
+  pendingAiReplies: 0,
 });
 
 export const loadConversation = createAppAsyncThunk(
@@ -35,10 +38,69 @@ export const loadConversation = createAppAsyncThunk(
   },
 );
 
+/**
+ * Delivers a user message that is already in the store. Used for the first
+ * attempt and for Retry, so there is one code path. Its lifecycle drives
+ * the message status: pending -> sending, fulfilled -> sent, rejected -> failed.
+ */
+export const deliverMessage = createAppAsyncThunk(
+  'conversation/deliver',
+  async (id: string, { getState, dispatch }) => {
+    const message = getState().conversation.entities[id];
+    if (message?.type !== 'user') throw new Error('Message no longer exists');
+
+    const result = await conversationApi.sendMessage({
+      id,
+      text: message.text,
+      replyToId: message.replyToId,
+    });
+    dispatch(requestAiReply({ messageId: id, text: message.text }));
+    return result;
+  },
+);
+
+export const requestAiReply = createAppAsyncThunk(
+  'conversation/aiReply',
+  (input: { messageId: string; text: string }) =>
+    conversationApi.getAiReply(input),
+);
+
+/**
+ * Optimistic send: the message appears immediately with a client id
+ * (status 'sending'), then delivery runs. The id never changes, so the
+ * row never remounts when the server confirms.
+ */
+export const sendMessage = createAppAsyncThunk(
+  'conversation/send',
+  async (text: string, { dispatch }) => {
+    const message: UserMessage = {
+      id: nanoid(),
+      type: 'user',
+      text,
+      createdAt: Date.now(),
+      status: 'sending',
+    };
+    dispatch(messageAdded(message));
+    await dispatch(deliverMessage(message.id));
+  },
+);
+
+/** Sets a user message's status, if it still exists (it may be deleted mid-send). */
+function setStatus(
+  state: typeof initialState,
+  id: string,
+  status: UserMessage['status'],
+) {
+  const message = state.entities[id];
+  if (message?.type === 'user') message.status = status;
+}
+
 const conversationSlice = createSlice({
   name: 'conversation',
   initialState,
-  reducers: {},
+  reducers: {
+    messageAdded: messagesAdapter.addOne,
+  },
   extraReducers: builder => {
     builder
       .addCase(loadConversation.pending, state => {
@@ -53,11 +115,32 @@ const conversationSlice = createSlice({
         state.loadStatus = 'error';
         state.loadError =
           action.error.message ?? 'Unable to load conversation.';
+      })
+      .addCase(deliverMessage.pending, (state, action) => {
+        setStatus(state, action.meta.arg, 'sending');
+      })
+      .addCase(deliverMessage.fulfilled, (state, action) => {
+        // Keep the client createdAt, so the message doesn't jump position.
+        setStatus(state, action.meta.arg, 'sent');
+      })
+      .addCase(deliverMessage.rejected, (state, action) => {
+        setStatus(state, action.meta.arg, 'failed');
+      })
+      .addCase(requestAiReply.pending, state => {
+        state.pendingAiReplies += 1;
+      })
+      .addCase(requestAiReply.fulfilled, (state, action) => {
+        state.pendingAiReplies -= 1;
+        messagesAdapter.addOne(state, action.payload);
+      })
+      .addCase(requestAiReply.rejected, state => {
+        state.pendingAiReplies -= 1;
       });
   },
 });
 
 export const conversationReducer = conversationSlice.reducer;
+export const { messageAdded } = conversationSlice.actions;
 
 export const {
   selectAll: selectAllMessages,
@@ -68,6 +151,9 @@ export const {
 
 export const selectLoadStatus = (state: RootState) =>
   state.conversation.loadStatus;
+
+export const selectIsAiTyping = (state: RootState) =>
+  state.conversation.pendingAiReplies > 0;
 
 /** List rows (date separators + grouping). Memoized: recomputed only when messages change. */
 export const selectTimeline = createSelector([selectAllMessages], messages =>

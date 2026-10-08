@@ -1,8 +1,10 @@
 import type { ConversationApi } from '../types';
 import { normalizeMessages } from '../normalize';
+import { pickAiReply } from './aiReplies';
 import { mockConversation } from './conversation';
 
 const LATENCY_MS = 800;
+const AI_THINKING_MS = 1500;
 
 /** Switches for demoing loading, empty and error states without a server. */
 export const mockScenario = {
@@ -31,5 +33,18 @@ export const mockConversationApi: ConversationApi = {
     if (mockScenario.failSends || /fail/i.test(text))
       throw new Error('Failed to send.');
     return { createdAt: Date.now() };
+  },
+
+  async getAiReply({ messageId, text }) {
+    await delay(AI_THINKING_MS);
+    const [reply] = normalizeMessages([
+      {
+        ...pickAiReply(text),
+        id: `ai-${messageId}`,
+        type: 'ai',
+        createdAt: new Date().toISOString(),
+      },
+    ]);
+    return reply;
   },
 };

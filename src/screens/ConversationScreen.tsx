@@ -1,5 +1,9 @@
 import { useEffect } from 'react';
+import { View } from 'react-native';
+import { KeyboardStickyView } from 'react-native-keyboard-controller';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StateView } from '../components/StateView';
+import { Composer } from '../features/chat/components/Composer';
 import { MessageList } from '../features/chat/components/MessageList';
 import {
   loadConversation,
@@ -10,6 +14,7 @@ import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 export function ConversationScreen() {
   const dispatch = useAppDispatch();
+  const { bottom } = useSafeAreaInsets();
   const loadStatus = useAppSelector(selectLoadStatus);
   const messageCount = useAppSelector(selectMessageCount);
 
@@ -31,14 +36,21 @@ export function ConversationScreen() {
     );
   }
 
-  if (messageCount === 0) {
-    return (
-      <StateView
-        title="Start your conversation."
-        description="Ask about your career, love life, health or anything on your mind."
-      />
-    );
-  }
-
-  return <MessageList />;
+  return (
+    <View className="flex-1">
+      {messageCount === 0 ? (
+        <StateView
+          title="Start your conversation."
+          description="Ask about your career, love life, health or anything on your mind."
+        />
+      ) : (
+        <MessageList />
+      )}
+      {/* Rides on top of the keyboard. When open, the safe-area padding
+          slides behind the keyboard instead of leaving a gap. */}
+      <KeyboardStickyView offset={{ closed: 0, opened: bottom }}>
+        <Composer />
+      </KeyboardStickyView>
+    </View>
+  );
 }

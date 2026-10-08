@@ -29,4 +29,16 @@ export const httpConversationApi: ConversationApi = {
     );
     return { createdAt: Date.parse(createdAt) };
   },
+
+  async getAiReply({ messageId }) {
+    const wire = await request<WireMessage>(
+      `/conversation/messages/${messageId}/reply`,
+      {
+        method: 'POST',
+      },
+    );
+    const [reply] = normalizeMessages([wire]);
+    if (!reply) throw new Error('Malformed AI reply');
+    return reply;
+  },
 };
