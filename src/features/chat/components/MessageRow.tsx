@@ -22,7 +22,7 @@ function MessageRowView({ id, ...group }: MessageRowProps) {
   if (!message) return null;
 
   return (
-    <View className={cn('px-3', group.isFirstInGroup ? 'mt-3' : 'mt-0.5')}>
+    <View className={cn('px-3', group.isFirstInGroup ? 'mt-3' : 'mt-1.5')}>
       {renderMessage(message, group)}
     </View>
   );
