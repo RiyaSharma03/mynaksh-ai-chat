@@ -1,10 +1,10 @@
 import { FeedbackBar } from '../../feedback/components/FeedbackBar';
-import { RecommendationRail } from '../../recommendations/components/RecommendationRail';
+import { RecommendationCarousel } from '../../recommendations/components/RecommendationCarousel';
 import type { AiMessage } from '../types';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
 import { SenderLabel } from './SenderLabel';
-import { Timestamp } from './Timestamp';
+import { MessageTime } from './MessageTime';
 
 export function AiMessageView({
   message,
@@ -22,11 +22,11 @@ export function AiMessageView({
         <MessageText text={message.text} className="text-foreground" />
       </MessageBubble>
       {message.recommendations.length > 0 && (
-        <RecommendationRail recommendations={message.recommendations} />
+        <RecommendationCarousel recommendations={message.recommendations} />
       )}
       <FeedbackBar messageId={message.id} />
       {group.isLastInGroup && (
-        <Timestamp value={message.createdAt} side="start" />
+        <MessageTime value={message.createdAt} side="start" />
       )}
     </>
   );

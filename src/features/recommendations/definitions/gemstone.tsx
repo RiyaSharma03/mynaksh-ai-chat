@@ -1,4 +1,4 @@
-import { CardMeta } from '../components/CardMeta';
+import { CardDetail } from '../components/CardDetail';
 import { readString } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
@@ -8,6 +8,6 @@ export const gemstone: RecommendationDefinition = {
   accent: '#5DA9FF',
   ctaLabel: 'View gemstone',
   Body: ({ recommendation }) => (
-    <CardMeta>{readString(recommendation, 'price')}</CardMeta>
+    <CardDetail>{readString(recommendation, 'price')}</CardDetail>
   ),
 };

@@ -1,4 +1,4 @@
-import { CardMeta } from '../components/CardMeta';
+import { CardDetail } from '../components/CardDetail';
 import { readNumber } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
@@ -9,7 +9,9 @@ export const tarot: RecommendationDefinition = {
   ctaLabel: 'Start reading',
   Body: ({ recommendation }) => {
     const cards = readNumber(recommendation, 'cards');
-    return <CardMeta>{cards ? `${cards}-card spread` : undefined}</CardMeta>;
+    return (
+      <CardDetail>{cards ? `${cards}-card spread` : undefined}</CardDetail>
+    );
   },
   onPress: (recommendation, { showAlert }) =>
     showAlert(

@@ -1,5 +1,5 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DemoMenu } from '../features/chat/components/DemoMenu';
+import { DemoScenarioMenu } from '../features/chat/components/DemoScenarioMenu';
 import { ConversationScreen } from '../screens/ConversationScreen';
 import { ThemeToggle } from '../theme/ThemeToggle';
 import type { RootStackParamList } from './types';
@@ -14,7 +14,7 @@ export function RootNavigator() {
         component={ConversationScreen}
         options={{
           title: 'AI Astrologer',
-          headerLeft: DemoMenu,
+          headerLeft: DemoScenarioMenu,
           headerRight: ThemeToggle,
         }}
       />

@@ -1,4 +1,4 @@
-import { CardMeta } from '../components/CardMeta';
+import { CardDetail } from '../components/CardDetail';
 import { readNumber } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
@@ -9,6 +9,8 @@ export const article: RecommendationDefinition = {
   ctaLabel: 'Read article',
   Body: ({ recommendation }) => {
     const minutes = readNumber(recommendation, 'readMinutes');
-    return <CardMeta>{minutes ? `${minutes} min read` : undefined}</CardMeta>;
+    return (
+      <CardDetail>{minutes ? `${minutes} min read` : undefined}</CardDetail>
+    );
   },
 };

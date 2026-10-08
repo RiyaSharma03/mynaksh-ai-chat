@@ -11,7 +11,7 @@ const renderItem = ({ item }: ListRenderItemInfo<Recommendation>) => (
 );
 
 /** Horizontal, snap-scrolling cards under an AI message. */
-export function RecommendationRail({
+export function RecommendationCarousel({
   recommendations,
 }: {
   recommendations: Recommendation[];

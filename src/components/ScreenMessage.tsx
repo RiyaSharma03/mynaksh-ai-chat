@@ -1,7 +1,7 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useTheme } from '../theme/useTheme';
 
-interface StateViewProps {
+interface ScreenMessageProps {
   title: string;
   description?: string;
   loading?: boolean;
@@ -9,12 +9,12 @@ interface StateViewProps {
 }
 
 /** Full-screen placeholder for loading, empty and error states. */
-export function StateView({
+export function ScreenMessage({
   title,
   description,
   loading,
   action,
-}: StateViewProps) {
+}: ScreenMessageProps) {
   const { colors } = useTheme();
   return (
     <View className="flex-1 items-center justify-center gap-3 px-8">

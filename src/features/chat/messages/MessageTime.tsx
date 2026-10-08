@@ -3,7 +3,7 @@ import { formatTime } from '../../../utils/date';
 import { cn } from '../../../utils/cn';
 
 /** Shown under the last message of a group. */
-export function Timestamp({
+export function MessageTime({
   value,
   side,
 }: {

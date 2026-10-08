@@ -11,7 +11,7 @@ const OPTIONS = [
 const SCENARIOS = ['normal', 'empty', 'error'] as const;
 
 /** Header menu to demo the loading, empty and error states with the mock backend. */
-export function DemoMenu() {
+export function DemoScenarioMenu() {
   const dispatch = useAppDispatch();
 
   const run = (index: number) => {

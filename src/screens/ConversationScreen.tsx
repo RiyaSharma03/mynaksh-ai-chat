@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { StateView } from '../components/StateView';
+import { ScreenMessage } from '../components/ScreenMessage';
 import { Composer } from '../features/chat/components/Composer';
 import { MessageActionSheet } from '../features/chat/components/MessageActionSheet';
 import { MessageList } from '../features/chat/components/MessageList';
@@ -24,12 +24,12 @@ export function ConversationScreen() {
   }, [dispatch]);
 
   if (loadStatus === 'idle' || loadStatus === 'loading') {
-    return <StateView loading title="Loading conversation..." />;
+    return <ScreenMessage loading title="Loading conversation..." />;
   }
 
   if (loadStatus === 'error') {
     return (
-      <StateView
+      <ScreenMessage
         title="Unable to load conversation."
         description="Check your connection and try again."
         action={{ label: 'Retry', onPress: () => dispatch(loadConversation()) }}
@@ -40,7 +40,7 @@ export function ConversationScreen() {
   return (
     <View className="flex-1">
       {messageCount === 0 ? (
-        <StateView
+        <ScreenMessage
           title="Start your conversation."
           description="Ask about your career, love life, health or anything on your mind."
         />

@@ -10,7 +10,7 @@ import {
   selectTypingSender,
 } from '../../../store/slices/conversationSlice';
 import type { TimelineItem } from '../buildTimeline';
-import { ChatScrollView } from './ChatScrollView';
+import { KeyboardAwareChatScroll } from './KeyboardAwareChatScroll';
 import { DateSeparator } from './DateSeparator';
 import { MessageRow } from './MessageRow';
 import { TypingIndicator } from './TypingIndicator';
@@ -84,7 +84,7 @@ export function MessageList() {
       keyExtractor={keyExtractor}
       getItemType={getItemType}
       renderItem={renderItem}
-      renderScrollComponent={ChatScrollView}
+      renderScrollComponent={KeyboardAwareChatScroll}
       initialScrollIndex={items.length - 1}
       maintainVisibleContentPosition={CHAT_POSITION}
       contentContainerStyle={CONTENT_STYLE}

@@ -11,7 +11,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
  * with its animation. `offset` is the safe-area gap the keyboard covers
  * anyway, so content moves only by keyboardHeight - offset.
  */
-export const ChatScrollView = forwardRef<
+export const KeyboardAwareChatScroll = forwardRef<
   KeyboardChatScrollViewRef,
   ScrollViewProps
 >((props, ref) => {
