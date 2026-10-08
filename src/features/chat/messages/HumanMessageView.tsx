@@ -14,6 +14,7 @@ export function HumanMessageView({
         <SenderLabel icon="👨‍🏫" name={message.author.name} badge="Astrologer" />
       )}
       <MessageBubble
+        messageId={message.id}
         side="start"
         {...group}
         className="border border-primary bg-raised"

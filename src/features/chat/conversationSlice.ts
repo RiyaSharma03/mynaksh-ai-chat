@@ -3,6 +3,7 @@ import {
   createSelector,
   createSlice,
   nanoid,
+  type PayloadAction,
 } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api';
 import type { RootState } from '../../store';
@@ -26,6 +27,10 @@ const initialState = messagesAdapter.getInitialState({
   loadError: null as string | null,
   /** AI replies in flight; > 0 shows the typing indicator. */
   pendingAiReplies: 0,
+  /** The long-pressed message whose action sheet is open. */
+  selectedMessageId: null as string | null,
+  /** The message the composer is replying to. */
+  replyToId: null as string | null,
 });
 
 export const loadConversation = createAppAsyncThunk(
@@ -72,15 +77,17 @@ export const requestAiReply = createAppAsyncThunk(
  */
 export const sendMessage = createAppAsyncThunk(
   'conversation/send',
-  async (text: string, { dispatch }) => {
+  async (text: string, { dispatch, getState }) => {
     const message: UserMessage = {
       id: nanoid(),
       type: 'user',
       text,
       createdAt: Date.now(),
       status: 'sending',
+      replyToId: getState().conversation.replyToId ?? undefined,
     };
     dispatch(messageAdded(message));
+    dispatch(replyCancelled());
     await dispatch(deliverMessage(message.id));
   },
 );
@@ -100,6 +107,25 @@ const conversationSlice = createSlice({
   initialState,
   reducers: {
     messageAdded: messagesAdapter.addOne,
+    /**
+     * Delete. The entity adapter removes it from ids + entities; FlashList's
+     * maintainVisibleContentPosition keeps the viewport where it was.
+     */
+    messageRemoved(state, action: PayloadAction<string>) {
+      messagesAdapter.removeOne(state, action.payload);
+      if (state.replyToId === action.payload) state.replyToId = null;
+      if (state.selectedMessageId === action.payload)
+        state.selectedMessageId = null;
+    },
+    messageSelected(state, action: PayloadAction<string | null>) {
+      state.selectedMessageId = action.payload;
+    },
+    replyStarted(state, action: PayloadAction<string>) {
+      state.replyToId = action.payload;
+    },
+    replyCancelled(state) {
+      state.replyToId = null;
+    },
   },
   extraReducers: builder => {
     builder
@@ -140,7 +166,13 @@ const conversationSlice = createSlice({
 });
 
 export const conversationReducer = conversationSlice.reducer;
-export const { messageAdded } = conversationSlice.actions;
+export const {
+  messageAdded,
+  messageRemoved,
+  messageSelected,
+  replyStarted,
+  replyCancelled,
+} = conversationSlice.actions;
 
 export const {
   selectAll: selectAllMessages,
@@ -154,6 +186,16 @@ export const selectLoadStatus = (state: RootState) =>
 
 export const selectIsAiTyping = (state: RootState) =>
   state.conversation.pendingAiReplies > 0;
+
+export const selectSelectedMessage = (state: RootState) => {
+  const id = state.conversation.selectedMessageId;
+  return id ? state.conversation.entities[id] : undefined;
+};
+
+export const selectReplyTarget = (state: RootState) => {
+  const id = state.conversation.replyToId;
+  return id ? state.conversation.entities[id] : undefined;
+};
 
 /** List rows (date separators + grouping). Memoized: recomputed only when messages change. */
 export const selectTimeline = createSelector([selectAllMessages], messages =>

@@ -3,6 +3,7 @@ import type { UserMessage } from '../types';
 import { DeliveryStatus } from './DeliveryStatus';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
+import { QuotedReply } from './QuotedReply';
 
 export function UserMessageView({
   message,
@@ -13,6 +14,7 @@ export function UserMessageView({
   return (
     <>
       <MessageBubble
+        messageId={message.id}
         side="end"
         {...group}
         className={cn(
@@ -20,6 +22,7 @@ export function UserMessageView({
           message.status === 'sending' && 'opacity-70',
         )}
       >
+        {message.replyToId && <QuotedReply id={message.replyToId} />}
         <MessageText text={message.text} className="text-white" />
       </MessageBubble>
       {showStatus && <DeliveryStatus message={message} />}

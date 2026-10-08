@@ -4,6 +4,7 @@ import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { StateView } from '../components/StateView';
 import { Composer } from '../features/chat/components/Composer';
+import { MessageActionSheet } from '../features/chat/components/MessageActionSheet';
 import { MessageList } from '../features/chat/components/MessageList';
 import {
   loadConversation,
@@ -51,6 +52,7 @@ export function ConversationScreen() {
       <KeyboardStickyView offset={{ closed: 0, opened: bottom }}>
         <Composer />
       </KeyboardStickyView>
+      <MessageActionSheet />
     </View>
   );
 }

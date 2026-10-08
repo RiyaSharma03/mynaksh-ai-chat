@@ -13,6 +13,7 @@ export function AiMessageView({
     <>
       {group.isFirstInGroup && <SenderLabel icon="✨" name="AI Astrologer" />}
       <MessageBubble
+        messageId={message.id}
         side="start"
         {...group}
         className="border border-border bg-surface"

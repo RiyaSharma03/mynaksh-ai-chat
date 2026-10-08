@@ -3,6 +3,7 @@ import { useMemo } from 'react';
 import { StatusBar } from 'react-native';
 import { Provider } from 'react-redux';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { BottomSheetModalProvider } from '@gorhom/bottom-sheet';
 import { KeyboardProvider } from 'react-native-keyboard-controller';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import {
@@ -25,7 +26,10 @@ export default function App() {
         <SafeAreaProvider>
           <KeyboardProvider>
             <ThemeProvider>
-              <ThemedNavigation />
+              {/* Inside ThemeProvider so sheets get the theme's colour variables. */}
+              <BottomSheetModalProvider>
+                <ThemedNavigation />
+              </BottomSheetModalProvider>
             </ThemeProvider>
           </KeyboardProvider>
         </SafeAreaProvider>
