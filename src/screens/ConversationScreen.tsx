@@ -3,8 +3,8 @@ import { View } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { ScreenMessage } from '../components/ScreenMessage';
-import { Composer } from '../features/send-message/Composer';
-import { MessageActionSheet } from '../features/message-actions/MessageActionSheet';
+import { Composer } from '../widgets/composer/Composer';
+import { MessageActionSheet } from '../widgets/message-actions/MessageActionSheet';
 import { MessageList } from '../widgets/chat-timeline/MessageList';
 import {
   loadConversation,

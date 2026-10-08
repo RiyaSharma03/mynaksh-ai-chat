@@ -1,6 +1,6 @@
 import { cn } from '../../../utils/cn';
 import type { UserMessage } from '../../../types/message';
-import { DeliveryStatus } from '../../../features/send-message/DeliveryStatus';
+import { DeliveryStatus } from './DeliveryStatus';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
 import { QuotedReply } from './QuotedReply';

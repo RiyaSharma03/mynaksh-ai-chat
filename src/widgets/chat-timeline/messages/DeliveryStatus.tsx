@@ -1,8 +1,8 @@
 import { Pressable, Text } from 'react-native';
-import { useAppDispatch } from '../../store/hooks';
-import { formatTime } from '../../utils/date';
-import { deliverMessage } from '../../store/slices/conversationSlice';
-import type { UserMessage } from '../../types/message';
+import { useAppDispatch } from '../../../store/hooks';
+import { formatTime } from '../../../utils/date';
+import { deliverMessage } from '../../../store/slices/conversationSlice';
+import type { UserMessage } from '../../../types/message';
 
 /** Sending… / 3:08 PM · Sent / Failed to send · Retry */
 export function DeliveryStatus({ message }: { message: UserMessage }) {

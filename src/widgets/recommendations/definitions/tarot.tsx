@@ -1,4 +1,4 @@
-import { CardDetail } from '../components/CardDetail';
+import { CardDetail } from '../CardDetail';
 import { readNumber } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
