@@ -5,7 +5,7 @@ import {
   type ListRenderItemInfo,
 } from '@shopify/flash-list';
 import { useAppSelector } from '../../../store/hooks';
-import { selectIsAiTyping, selectTimeline } from '../conversationSlice';
+import { selectTimeline, selectTypingSender } from '../conversationSlice';
 import type { TimelineItem } from '../timeline';
 import { ChatScrollView } from './ChatScrollView';
 import { DateSeparator } from './DateSeparator';
@@ -54,13 +54,13 @@ const renderItem = ({ item }: ListRenderItemInfo<ListItem>) => {
 export function MessageList() {
   const listRef = useRef<FlashListRef<ListItem>>(null);
   const timeline = useAppSelector(selectTimeline);
-  const isAiTyping = useAppSelector(selectIsAiTyping);
+  const isTyping = useAppSelector(state => !!selectTypingSender(state));
 
   // The typing indicator is a row like any other, so it scrolls into view
   // the same way a new message does.
   const items = useMemo<ListItem[]>(
-    () => (isAiTyping ? [...timeline, TYPING_ITEM] : timeline),
-    [timeline, isAiTyping],
+    () => (isTyping ? [...timeline, TYPING_ITEM] : timeline),
+    [timeline, isTyping],
   );
 
   // Your own new message always scrolls to the bottom, even if you were

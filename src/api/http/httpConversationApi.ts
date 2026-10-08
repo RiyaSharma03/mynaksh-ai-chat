@@ -30,15 +30,17 @@ export const httpConversationApi: ConversationApi = {
     return { createdAt: Date.parse(createdAt) };
   },
 
-  async getAiReply({ messageId }) {
-    const wire = await request<WireMessage>(
-      `/conversation/messages/${messageId}/reply`,
-      {
-        method: 'POST',
-      },
+  /**
+   * Request/response stand-in: the AI is assumed to be typing until the
+   * replies arrive. A production backend would push typing events and
+   * astrologer replies over a socket into the same messageReceived action.
+   */
+  async getReplies({ messageId }, { onTyping }) {
+    onTyping({ type: 'ai' });
+    const wire = await request<WireMessage[]>(
+      `/conversation/messages/${messageId}/replies`,
+      { method: 'POST' },
     );
-    const [reply] = normalizeMessages([wire]);
-    if (!reply) throw new Error('Malformed AI reply');
-    return reply;
+    return normalizeMessages(wire);
   },
 };

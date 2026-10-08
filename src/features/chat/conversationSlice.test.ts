@@ -1,5 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api';
+import type { TypingSender } from '../../api/types';
 import type { Message } from './types';
 import {
   conversationReducer,
@@ -11,7 +12,7 @@ import {
   selectAllMessages,
   selectReplyTarget,
   selectSelectedMessage,
-  selectIsAiTyping,
+  selectTypingSender,
   selectLoadStatus,
   sendMessage,
 } from './conversationSlice';
@@ -20,12 +21,12 @@ jest.mock('../../api', () => ({
   conversationApi: {
     fetchConversation: jest.fn(),
     sendMessage: jest.fn(),
-    getAiReply: jest.fn(),
+    getReplies: jest.fn(),
   },
 }));
 const fetchConversation = conversationApi.fetchConversation as jest.Mock;
 const sendMessageApi = conversationApi.sendMessage as jest.Mock;
-const getAiReply = conversationApi.getAiReply as jest.Mock;
+const getReplies = conversationApi.getReplies as jest.Mock;
 
 const makeStore = () =>
   configureStore({ reducer: { conversation: conversationReducer } });
@@ -40,7 +41,7 @@ const message = (id: string, createdAt: number): Message => ({
 beforeEach(() => {
   fetchConversation.mockReset();
   sendMessageApi.mockReset();
-  getAiReply.mockReset();
+  getReplies.mockReset();
 });
 
 it('loads messages sorted by time', async () => {
@@ -90,13 +91,23 @@ const userMessages = (store: ReturnType<typeof makeStore>) =>
   );
 
 describe('sending', () => {
+  /** getReplies that reports `sender` as typing, then waits for `finish`. */
+  const deferredReplies = (sender: TypingSender) => {
+    let finish: (replies: Message[]) => void = () => {};
+    getReplies.mockImplementation((_input, { onTyping }) => {
+      onTyping(sender);
+      return new Promise(resolve => (finish = resolve));
+    });
+    return (replies: Message[]) => finish(replies);
+  };
+  const flush = () => new Promise<void>(resolve => setTimeout(resolve, 0));
+
   it('adds the message optimistically, marks it sent, then adds the AI reply', async () => {
     let finishSend: (value: { createdAt: number }) => void = () => {};
     sendMessageApi.mockReturnValue(
       new Promise(resolve => (finishSend = resolve)),
     );
-    let finishReply: (reply: Message) => void = () => {};
-    getAiReply.mockReturnValue(new Promise(resolve => (finishReply = resolve)));
+    const finishReplies = deferredReplies({ type: 'ai' });
     const store = makeStore();
 
     const sending = store.dispatch(sendMessage('Hello'));
@@ -107,28 +118,61 @@ describe('sending', () => {
     finishSend({ createdAt: Date.now() });
     await sending;
     expect(userMessages(store)[0].status).toBe('sent');
-    expect(selectIsAiTyping(store.getState())).toBe(true);
+    expect(selectTypingSender(store.getState())).toEqual({ type: 'ai' });
 
-    finishReply({
-      id: 'reply',
-      type: 'ai',
-      text: 'Hi',
-      createdAt: Date.now() + 1000,
-      recommendations: [],
-      feedback: { rating: null, reasons: [] },
-    });
-    await new Promise<void>(resolve => setTimeout(resolve, 0));
-    expect(selectIsAiTyping(store.getState())).toBe(false);
+    finishReplies([
+      {
+        id: 'reply',
+        type: 'ai',
+        text: 'Hi',
+        createdAt: Date.now() + 1000,
+        recommendations: [],
+        feedback: { rating: null, reasons: [] },
+      },
+    ]);
+    await flush();
+    expect(selectTypingSender(store.getState())).toBeUndefined();
     expect(selectAllMessages(store.getState()).map(m => m.type)).toEqual([
       'user',
       'ai',
     ]);
   });
 
+  it('hands off to an astrologer: names them while typing, then adds their messages', async () => {
+    sendMessageApi.mockResolvedValue({ createdAt: Date.now() });
+    const finishReplies = deferredReplies({ type: 'human', name: 'Vinod' });
+    const store = makeStore();
+
+    await store.dispatch(sendMessage('Can I talk to an astrologer?'));
+    expect(selectTypingSender(store.getState())).toEqual({
+      type: 'human',
+      name: 'Vinod',
+    });
+
+    const later = Date.now() + 1000;
+    finishReplies([
+      message('joined', later),
+      {
+        id: 'h',
+        type: 'human',
+        text: 'Namaste',
+        createdAt: later + 1,
+        author: { name: 'Vinod' },
+      },
+    ]);
+    await flush();
+    expect(selectTypingSender(store.getState())).toBeUndefined();
+    expect(selectAllMessages(store.getState()).map(m => m.type)).toEqual([
+      'user',
+      'system',
+      'human',
+    ]);
+  });
+
   it('marks a failed send, and Retry re-sends the same message', async () => {
     sendMessageApi.mockRejectedValueOnce(new Error('offline'));
     sendMessageApi.mockResolvedValueOnce({ createdAt: Date.now() });
-    getAiReply.mockReturnValue(new Promise(() => {}));
+    getReplies.mockReturnValue(new Promise(() => {}));
     const store = makeStore();
 
     await store.dispatch(sendMessage('Hello'));

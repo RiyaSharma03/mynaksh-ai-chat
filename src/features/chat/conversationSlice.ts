@@ -2,10 +2,12 @@ import {
   createEntityAdapter,
   createSelector,
   createSlice,
+  isAnyOf,
   nanoid,
   type PayloadAction,
 } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api';
+import type { TypingSender } from '../../api/types';
 import type { RootState } from '../../store';
 import { createAppAsyncThunk } from '../../store/hooks';
 import { buildTimeline } from './timeline';
@@ -25,8 +27,11 @@ type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 const initialState = messagesAdapter.getInitialState({
   loadStatus: 'idle' as LoadStatus,
   loadError: null as string | null,
-  /** AI replies in flight; > 0 shows the typing indicator. */
-  pendingAiReplies: 0,
+  /**
+   * Who is typing a reply, keyed by the user message being answered. A map,
+   * so overlapping replies each clear only their own entry.
+   */
+  typing: {} as Record<string, TypingSender>,
   /** The long-pressed message whose action sheet is open. */
   selectedMessageId: null as string | null,
   /** The message the composer is replying to. */
@@ -59,15 +64,25 @@ export const deliverMessage = createAppAsyncThunk(
       text: message.text,
       replyToId: message.replyToId,
     });
-    dispatch(requestAiReply({ messageId: id, text: message.text }));
+    dispatch(requestReplies({ messageId: id, text: message.text }));
     return result;
   },
 );
 
-export const requestAiReply = createAppAsyncThunk(
-  'conversation/aiReply',
-  (input: { messageId: string; text: string }) =>
-    conversationApi.getAiReply(input),
+/**
+ * Asks the backend for the answer to a delivered message. Whoever answers
+ * (AI or astrologer), each reply enters through messageReceived, the same
+ * action a socket push would use.
+ */
+export const requestReplies = createAppAsyncThunk(
+  'conversation/replies',
+  async (input: { messageId: string; text: string }, { dispatch }) => {
+    const replies = await conversationApi.getReplies(input, {
+      onTyping: sender =>
+        dispatch(typingChanged({ messageId: input.messageId, sender })),
+    });
+    replies.forEach(reply => dispatch(messageReceived(reply)));
+  },
 );
 
 /**
@@ -107,6 +122,14 @@ const conversationSlice = createSlice({
   initialState,
   reducers: {
     messageAdded: messagesAdapter.addOne,
+    /** Any incoming message, from any sender: the single entry point for replies. */
+    messageReceived: messagesAdapter.upsertOne,
+    typingChanged(
+      state,
+      action: PayloadAction<{ messageId: string; sender: TypingSender }>,
+    ) {
+      state.typing[action.payload.messageId] = action.payload.sender;
+    },
     /**
      * Delete. The entity adapter removes it from ids + entities; FlashList's
      * maintainVisibleContentPosition keeps the viewport where it was.
@@ -152,22 +175,20 @@ const conversationSlice = createSlice({
       .addCase(deliverMessage.rejected, (state, action) => {
         setStatus(state, action.meta.arg, 'failed');
       })
-      .addCase(requestAiReply.pending, state => {
-        state.pendingAiReplies += 1;
-      })
-      .addCase(requestAiReply.fulfilled, (state, action) => {
-        state.pendingAiReplies -= 1;
-        messagesAdapter.addOne(state, action.payload);
-      })
-      .addCase(requestAiReply.rejected, state => {
-        state.pendingAiReplies -= 1;
-      });
+      .addMatcher(
+        isAnyOf(requestReplies.fulfilled, requestReplies.rejected),
+        (state, action) => {
+          delete state.typing[action.meta.arg.messageId];
+        },
+      );
   },
 });
 
 export const conversationReducer = conversationSlice.reducer;
 export const {
   messageAdded,
+  messageReceived,
+  typingChanged,
   messageRemoved,
   messageSelected,
   replyStarted,
@@ -184,8 +205,10 @@ export const {
 export const selectLoadStatus = (state: RootState) =>
   state.conversation.loadStatus;
 
-export const selectIsAiTyping = (state: RootState) =>
-  state.conversation.pendingAiReplies > 0;
+/** Whoever is typing a reply right now, if anyone (the first, if several). */
+export const selectTypingSender = (
+  state: RootState,
+): TypingSender | undefined => Object.values(state.conversation.typing)[0];
 
 export const selectSelectedMessage = (state: RootState) => {
   const id = state.conversation.selectedMessageId;

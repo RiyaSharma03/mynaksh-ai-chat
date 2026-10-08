@@ -29,8 +29,24 @@ export interface WireMessage {
 export interface ConversationApi {
   fetchConversation(): Promise<Message[]>;
   sendMessage(input: SendMessageInput): Promise<{ createdAt: number }>;
-  /** The AI's answer to a delivered user message. */
-  getAiReply(input: { messageId: string; text: string }): Promise<Message>;
+  /**
+   * The answer to a delivered user message. The backend decides who answers
+   * (the AI, or a human astrologer after a handoff), so it can be several
+   * messages from any sender. `onTyping` reports who is typing meanwhile.
+   */
+  getReplies(input: ReplyInput, events: ReplyEvents): Promise<Message[]>;
+}
+
+export interface ReplyInput {
+  messageId: string;
+  text: string;
+}
+
+/** Who is typing, so the indicator can name them before the reply arrives. */
+export type TypingSender = { type: 'ai' } | { type: 'human'; name: string };
+
+export interface ReplyEvents {
+  onTyping(sender: TypingSender): void;
 }
 
 export interface SendMessageInput {
