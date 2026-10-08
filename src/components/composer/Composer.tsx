@@ -2,7 +2,7 @@ import { type ComponentRef, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useTheme } from '../../theme/useTheme';
+import { colors } from '../../constants/colors';
 import { cn } from '../../utils/cn';
 import {
   replyCancelled,
@@ -17,7 +17,6 @@ import { previewText, senderName } from '../../utils/message';
  */
 export function Composer() {
   const dispatch = useAppDispatch();
-  const { colors } = useTheme();
   const { bottom } = useSafeAreaInsets();
   const [text, setText] = useState('');
   const inputRef = useRef<ComponentRef<typeof TextInput>>(null);

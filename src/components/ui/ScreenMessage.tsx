@@ -1,5 +1,5 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { useTheme } from '../../theme/useTheme';
+import { colors } from '../../constants/colors';
 import { AppLogo } from './AppLogo';
 
 interface ScreenMessageProps {
@@ -16,7 +16,6 @@ export function ScreenMessage({
   loading,
   action,
 }: ScreenMessageProps) {
-  const { colors } = useTheme();
   return (
     <View className="flex-1 items-center justify-center gap-3 px-8">
       <AppLogo size={72} />

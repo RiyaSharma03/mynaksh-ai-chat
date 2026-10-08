@@ -9,7 +9,7 @@ import {
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { useTheme } from '../../theme/useTheme';
+import { colors } from '../../constants/colors';
 import { cn } from '../../utils/cn';
 import {
   deliverMessage,
@@ -44,7 +44,6 @@ const renderBackdrop = (props: BottomSheetBackdropProps) => (
  */
 export function MessageActionSheet() {
   const dispatch = useAppDispatch();
-  const { colors } = useTheme();
   const { bottom } = useSafeAreaInsets();
   const sheetRef = useRef<BottomSheetModal>(null);
   const selected = useAppSelector(selectSelectedMessage);

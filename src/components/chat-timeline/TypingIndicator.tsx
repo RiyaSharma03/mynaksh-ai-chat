@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAppSelector } from '../../store/hooks';
 import { selectTypingSender } from '../../store/slices/conversationSlice';
-import { useTheme } from '../../theme/useTheme';
+import { colors } from '../../constants/colors';
 import { AppLogo } from '../ui/AppLogo';
 import { SenderLabel } from '../ui/SenderLabel';
 
@@ -41,7 +41,6 @@ export function TypingIndicator() {
 
 /** One bouncing dot (UI thread, Reanimated); offset by index so three form a wave. */
 function Dot({ index }: { index: number }) {
-  const { colors } = useTheme();
   const progress = useSharedValue(0);
 
   useEffect(() => {
