@@ -9,7 +9,7 @@ import {
   selectReplyTarget,
   sendMessage,
 } from '../../store/slices/conversationSlice';
-import { previewText, senderName } from '../../utils/senderName';
+import { previewText, senderName } from '../../utils/message';
 
 /**
  * Message input. The draft is local state: nothing else needs it, and

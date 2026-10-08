@@ -12,6 +12,7 @@ import Animated, {
 import { useAppSelector } from '../../store/hooks';
 import { selectTypingSender } from '../../store/slices/conversationSlice';
 import { useTheme } from '../../theme/useTheme';
+import { AppLogo } from '../ui/AppLogo';
 import { SenderLabel } from '../ui/SenderLabel';
 
 /** "… is typing" row, labelled with whoever is answering: the AI or an astrologer. */
@@ -25,7 +26,7 @@ export function TypingIndicator() {
       {isHuman ? (
         <SenderLabel icon="👨‍🏫" name={name} badge="Astrologer" />
       ) : (
-        <SenderLabel icon="✨" name={name} />
+        <SenderLabel icon={<AppLogo size={18} />} name={name} />
       )}
       <View className="self-start rounded-2xl border border-border bg-surface px-4 py-3.5">
         <View className="flex-row gap-1.5">

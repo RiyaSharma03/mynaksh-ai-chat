@@ -12,7 +12,7 @@ import type { FeedbackReason } from '../../types/feedback';
 import type { RootState } from '..';
 import { createAppAsyncThunk } from '../hooks';
 import type { Message, UserMessage } from '../../types/message';
-import { buildTimeline } from '../../utils/buildTimeline';
+import { buildTimeline } from '../../utils/timeline';
 
 /**
  * Messages are normalized (ids + entities) by RTK's entity adapter and kept

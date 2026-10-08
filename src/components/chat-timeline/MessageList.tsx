@@ -15,7 +15,7 @@ import {
   selectTimeline,
   selectTypingSender,
 } from '../../store/slices/conversationSlice';
-import type { TimelineItem } from '../../utils/buildTimeline';
+import type { TimelineItem } from '../../utils/timeline';
 import { MessageRow } from './MessageRow';
 import { TypingIndicator } from './TypingIndicator';
 

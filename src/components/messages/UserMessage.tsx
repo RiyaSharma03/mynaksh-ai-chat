@@ -5,8 +5,8 @@ import {
   selectMessageById,
 } from '../../store/slices/conversationSlice';
 import type { UserMessage as UserMessageType } from '../../types/message';
-import { formatTime } from '../../utils/date';
-import { previewText, senderName } from '../../utils/senderName';
+import { formatTime } from '../../utils/timeline';
+import { previewText, senderName } from '../../utils/message';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 
 /** A message the user sent: bubble on the right, optional quote, delivery status. */

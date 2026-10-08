@@ -1,5 +1,6 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useTheme } from '../../theme/useTheme';
+import { AppLogo } from './AppLogo';
 
 interface ScreenMessageProps {
   title: string;
@@ -18,6 +19,7 @@ export function ScreenMessage({
   const { colors } = useTheme();
   return (
     <View className="flex-1 items-center justify-center gap-3 px-8">
+      <AppLogo size={72} />
       {loading && <ActivityIndicator color={colors.primary} />}
       <Text className="text-center text-base font-semibold text-foreground">
         {title}

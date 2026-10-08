@@ -1,7 +1,8 @@
 import { Text } from 'react-native';
 import type { AiMessage, HumanMessage } from '../../types/message';
-import { formatTime } from '../../utils/date';
+import { formatTime } from '../../utils/timeline';
 import { RecommendationCarousel } from '../recommendations/RecommendationCarousel';
+import { AppLogo } from '../ui/AppLogo';
 import { SenderLabel } from '../ui/SenderLabel';
 import { FeedbackBar } from './FeedbackBar';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
@@ -19,7 +20,7 @@ export function IncomingMessage({
     <>
       {group.isFirstInGroup &&
         (isAi ? (
-          <SenderLabel icon="✨" name="AI Astrologer" />
+          <SenderLabel icon={<AppLogo size={18} />} name="AI Astrologer" />
         ) : (
           <SenderLabel
             icon="👨‍🏫"

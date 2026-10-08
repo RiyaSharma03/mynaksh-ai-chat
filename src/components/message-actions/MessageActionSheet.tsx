@@ -21,8 +21,9 @@ import {
 import {
   getMessageActions,
   type MessageAction,
-} from '../../utils/getMessageActions';
-import { previewText, senderName } from '../../utils/senderName';
+  previewText,
+  senderName,
+} from '../../utils/message';
 import type { Message } from '../../types/message';
 
 const ACTION_LABELS: Record<MessageAction, { icon: string; label: string }> = {

@@ -1,4 +1,4 @@
-import { getMessageActions } from '../src/utils/getMessageActions';
+import { getMessageActions } from '../src/utils/message';
 import type { Message } from '../src/types/message';
 
 const base = { id: '1', text: 'Hi', createdAt: 0 };
