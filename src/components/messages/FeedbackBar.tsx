@@ -4,15 +4,15 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { Chip } from '../../ui/Chip';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { Chip } from '../ui/Chip';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   feedbackRated,
   feedbackReasonToggled,
   saveFeedback,
   selectMessageById,
-} from '../../../store/slices/conversationSlice';
-import { FEEDBACK_REASONS, type FeedbackReason } from '../../../types/feedback';
+} from '../../store/slices/conversationSlice';
+import { FEEDBACK_REASONS, type FeedbackReason } from '../../types/feedback';
 
 const REASONS = Object.entries(FEEDBACK_REASONS) as Array<
   [FeedbackReason, string]

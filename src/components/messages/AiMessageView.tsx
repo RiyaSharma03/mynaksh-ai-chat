@@ -1,9 +1,9 @@
 import { FeedbackBar } from './FeedbackBar';
-import { RecommendationCarousel } from '../../recommendations/RecommendationCarousel';
-import type { AiMessage } from '../../../types/message';
+import { RecommendationCarousel } from '../recommendations/RecommendationCarousel';
+import type { AiMessage } from '../../types/message';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
-import { SenderLabel } from '../../ui/SenderLabel';
+import { SenderLabel } from '../ui/SenderLabel';
 import { MessageTime } from './MessageTime';
 
 export function AiMessageView({

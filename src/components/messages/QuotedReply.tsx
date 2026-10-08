@@ -1,7 +1,7 @@
 import { Text, View } from 'react-native';
-import { useAppSelector } from '../../../store/hooks';
-import { selectMessageById } from '../../../store/slices/conversationSlice';
-import { previewText, senderName } from '../../../utils/senderName';
+import { useAppSelector } from '../../store/hooks';
+import { selectMessageById } from '../../store/slices/conversationSlice';
+import { previewText, senderName } from '../../utils/senderName';
 
 /** The quoted original inside a reply bubble. Selects the original itself by id. */
 export function QuotedReply({ id }: { id: string }) {

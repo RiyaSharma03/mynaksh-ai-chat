@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import type { SystemMessage } from '../../../types/message';
+import type { SystemMessage } from '../../types/message';
 
 export function SystemMessageView({ message }: { message: SystemMessage }) {
   return (

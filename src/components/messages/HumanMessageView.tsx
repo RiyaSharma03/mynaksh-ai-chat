@@ -1,7 +1,7 @@
-import type { HumanMessage } from '../../../types/message';
+import type { HumanMessage } from '../../types/message';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
-import { SenderLabel } from '../../ui/SenderLabel';
+import { SenderLabel } from '../ui/SenderLabel';
 import { MessageTime } from './MessageTime';
 
 export function HumanMessageView({

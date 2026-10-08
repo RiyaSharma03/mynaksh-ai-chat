@@ -1,6 +1,6 @@
 import { Text } from 'react-native';
-import { formatTime } from '../../../utils/date';
-import { cn } from '../../../utils/cn';
+import { formatTime } from '../../utils/date';
+import { cn } from '../../utils/cn';
 
 /** Shown under the last message of a group. */
 export function MessageTime({

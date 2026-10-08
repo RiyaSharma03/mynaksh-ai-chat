@@ -1,5 +1,5 @@
-import { cn } from '../../../utils/cn';
-import type { UserMessage } from '../../../types/message';
+import { cn } from '../../utils/cn';
+import type { UserMessage } from '../../types/message';
 import { DeliveryStatus } from './DeliveryStatus';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
