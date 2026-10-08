@@ -1,4 +1,4 @@
-import { normalizeMessages } from '../../api/normalizeMessages';
+import { normalizeMessages } from '../../utils/normalizeMessages';
 import type { ConversationService } from '../../services/conversationService';
 import { pickAiReply } from '../data/aiReplies';
 import { initialMessages } from '../data/initialMessages';

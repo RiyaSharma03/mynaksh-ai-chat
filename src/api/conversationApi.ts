@@ -1,6 +1,9 @@
 import type { ConversationService } from '../services/conversationService';
 import { apiClient } from './client';
-import { normalizeMessages, type WireMessage } from './normalizeMessages';
+import {
+  normalizeMessages,
+  type WireMessage,
+} from '../utils/normalizeMessages';
 
 /**
  * The real backend, ready for when one exists (not used while USE_MOCK_API
