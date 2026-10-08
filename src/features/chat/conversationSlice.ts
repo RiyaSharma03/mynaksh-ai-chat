@@ -1,7 +1,12 @@
-import { createEntityAdapter, createSlice } from '@reduxjs/toolkit';
+import {
+  createEntityAdapter,
+  createSelector,
+  createSlice,
+} from '@reduxjs/toolkit';
 import { conversationApi } from '../../api';
 import type { RootState } from '../../store';
 import { createAppAsyncThunk } from '../../store/hooks';
+import { buildTimeline } from './timeline';
 import type { Message } from './types';
 
 /**
@@ -63,3 +68,8 @@ export const {
 
 export const selectLoadStatus = (state: RootState) =>
   state.conversation.loadStatus;
+
+/** List rows (date separators + grouping). Memoized: recomputed only when messages change. */
+export const selectTimeline = createSelector([selectAllMessages], messages =>
+  buildTimeline(messages),
+);

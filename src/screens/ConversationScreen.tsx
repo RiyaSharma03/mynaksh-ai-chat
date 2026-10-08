@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { Text, View } from 'react-native';
 import { StateView } from '../components/StateView';
+import { MessageList } from '../features/chat/components/MessageList';
 import {
   loadConversation,
   selectLoadStatus,
@@ -40,10 +40,5 @@ export function ConversationScreen() {
     );
   }
 
-  // Temporary until the timeline lands in step 4.
-  return (
-    <View className="flex-1 items-center justify-center">
-      <Text className="text-muted">{messageCount} messages loaded</Text>
-    </View>
-  );
+  return <MessageList />;
 }
