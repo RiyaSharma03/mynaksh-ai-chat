@@ -1,5 +1,5 @@
-import { getMessageActions } from './getMessageActions';
-import type { Message } from '../../types/message';
+import { getMessageActions } from '../src/widgets/message-actions/getMessageActions';
+import type { Message } from '../src/types/message';
 
 const base = { id: '1', text: 'Hi', createdAt: 0 };
 

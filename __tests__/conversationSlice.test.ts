@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { conversationApi } from '../../api/conversationApi';
-import type { TypingSender } from '../../api/conversationApi';
-import type { Message } from '../../types/message';
+import { conversationApi } from '../src/api/conversationApi';
+import type { TypingSender } from '../src/api/conversationApi';
+import type { Message } from '../src/types/message';
 import {
   conversationReducer,
   deliverMessage,
@@ -15,9 +15,9 @@ import {
   selectTypingSender,
   selectLoadStatus,
   sendMessage,
-} from './conversationSlice';
+} from '../src/store/slices/conversationSlice';
 
-jest.mock('../../api/conversationApi', () => ({
+jest.mock('../src/api/conversationApi', () => ({
   conversationApi: {
     fetchConversation: jest.fn(),
     sendMessage: jest.fn(),

@@ -1,5 +1,5 @@
-import type { Message } from '../../types/message';
-import { buildTimeline, type TimelineItem } from './buildTimeline';
+import type { Message } from '../src/types/message';
+import { buildTimeline, type TimelineItem } from '../src/widgets/chat-timeline/buildTimeline';
 
 const NOW = new Date(2026, 9, 8, 15, 0).getTime();
 const MIN = 60 * 1000;

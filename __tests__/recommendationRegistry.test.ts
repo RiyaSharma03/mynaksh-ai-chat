@@ -1,5 +1,5 @@
-import { fallback } from './definitions/fallback';
-import { getRecommendationDefinition } from './recommendationRegistry';
+import { fallback } from '../src/widgets/recommendations/definitions/fallback';
+import { getRecommendationDefinition } from '../src/widgets/recommendations/recommendationRegistry';
 
 it.each([
   'gemstone',
