@@ -180,6 +180,8 @@ consultation: {
 | Decision | Why | Next step |
 |---|---|---|
 | Mock API only; the real `services/api` is written but never run | The brief says mock APIs are sufficient | Point `API_BASE_URL` at a server and set `USE_MOCK_API = false` |
+| Config is a typed `services/env.ts`, not a `.env` file | React Native can't read `.env` without a library (`react-native-config` is native; `react-native-dotenv` is a Babel plugin), and there are only two values. Note: anything shipped in a mobile app, `.env` included, is readable from the app, so neither option hides secrets | `.env.development` / `.env.production` with `react-native-dotenv` for per-build config; real secrets stay on the server |
+| `services/` lives in `src/` and is not a server | It's app code that runs on the phone: the mock backend and the client that would call a real API | A real backend would be a separate project outside `src/` |
 | Over HTTP, the real API can't say *who* is typing before the reply arrives | Request/response has no push | A WebSocket for typing events and astrologer replies |
 | No persistence or offline queue | Out of scope | Persist the store (e.g. MMKV) and queue failed sends |
 | Feedback saves on every tap, fire-and-forget | Simple, and a failed save doesn't undo the user's choice | Debounce per message; retry failed saves |
