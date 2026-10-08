@@ -1,10 +1,10 @@
 import { Pressable, Text, View } from 'react-native';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   replyCancelled,
   selectReplyTarget,
-} from '../../../store/slices/conversationSlice';
-import { senderName } from '../senderName';
+} from '../../store/slices/conversationSlice';
+import { senderName } from '../../utils/senderName';
 
 /** "Replying to …" bar above the composer. Reads the reply target from the store. */
 export function ReplyPreview() {

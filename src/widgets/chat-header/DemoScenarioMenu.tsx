@@ -1,7 +1,8 @@
-import { ActionSheetIOS, Alert, Platform, Pressable, Text } from 'react-native';
-import { mockScenario } from '../../../api/mock/conversationMock';
-import { useAppDispatch } from '../../../store/hooks';
-import { loadConversation } from '../../../store/slices/conversationSlice';
+import { ActionSheetIOS, Alert, Platform } from 'react-native';
+import { IconButton } from '../../components/IconButton';
+import { mockScenario } from '../../api/mock/conversationMock';
+import { useAppDispatch } from '../../store/hooks';
+import { loadConversation } from '../../store/slices/conversationSlice';
 
 const OPTIONS = [
   'Reload conversation',
@@ -40,13 +41,6 @@ export function DemoScenarioMenu() {
   };
 
   return (
-    <Pressable
-      onPress={open}
-      hitSlop={8}
-      accessibilityRole="button"
-      accessibilityLabel="Demo scenarios"
-    >
-      <Text className="text-xl font-bold text-foreground">⋯</Text>
-    </Pressable>
+    <IconButton icon="⋯" onPress={open} accessibilityLabel="Demo scenarios" />
   );
 }

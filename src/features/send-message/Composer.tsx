@@ -1,10 +1,10 @@
 import { type ComponentRef, useEffect, useRef, useState } from 'react';
 import { Pressable, Text, TextInput, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { useTheme } from '../../../theme/useTheme';
-import { cn } from '../../../utils/cn';
-import { sendMessage } from '../../../store/slices/conversationSlice';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useTheme } from '../../theme/useTheme';
+import { cn } from '../../utils/cn';
+import { sendMessage } from '../../store/slices/conversationSlice';
 import { ReplyPreview } from './ReplyPreview';
 
 /**

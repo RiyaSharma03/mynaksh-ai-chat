@@ -1,4 +1,4 @@
-import type { Recommendation } from './types';
+import type { Recommendation } from '../../types/recommendation';
 
 /**
  * Safe readers for the free-form `data` payload. A missing or wrongly typed

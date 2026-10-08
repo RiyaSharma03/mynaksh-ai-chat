@@ -1,6 +1,6 @@
 import { Text, View } from 'react-native';
 
-export function DateSeparator({ label }: { label: string }) {
+export function LabelDivider({ label }: { label: string }) {
   return (
     <View
       className="flex-row items-center gap-3 px-6 pb-1 pt-5"

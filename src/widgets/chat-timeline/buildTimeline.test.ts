@@ -1,4 +1,4 @@
-import type { Message } from './types';
+import type { Message } from '../../types/message';
 import { buildTimeline, type TimelineItem } from './buildTimeline';
 
 const NOW = new Date(2026, 9, 8, 15, 0).getTime();

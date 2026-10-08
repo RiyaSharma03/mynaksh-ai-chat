@@ -1,5 +1,5 @@
-import type { Feedback } from '../feedback/types';
-import type { Recommendation } from '../recommendations/types';
+import type { Feedback } from './feedback';
+import type { Recommendation } from './recommendation';
 
 /**
  * A message is a union keyed on `type`, so each kind carries only its own

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { DemoScenarioMenu } from '../features/chat/components/DemoScenarioMenu';
+import { DemoScenarioMenu } from '../widgets/chat-header/DemoScenarioMenu';
 import { ConversationScreen } from '../screens/ConversationScreen';
-import { ThemeToggle } from '../theme/ThemeToggle';
+import { ThemeToggle } from '../widgets/chat-header/ThemeToggle';
 import type { RootStackParamList } from './types';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();

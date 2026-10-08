@@ -8,19 +8,19 @@ import {
 } from '@gorhom/bottom-sheet';
 import Clipboard from '@react-native-clipboard/clipboard';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useAppDispatch, useAppSelector } from '../../../store/hooks';
-import { useTheme } from '../../../theme/useTheme';
-import { cn } from '../../../utils/cn';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { useTheme } from '../../theme/useTheme';
+import { cn } from '../../utils/cn';
 import {
   deliverMessage,
   messageRemoved,
   messageSelected,
   replyStarted,
   selectSelectedMessage,
-} from '../../../store/slices/conversationSlice';
-import { getMessageActions, type MessageAction } from '../messageActions';
-import { senderName } from '../senderName';
-import type { Message } from '../types';
+} from '../../store/slices/conversationSlice';
+import { getMessageActions, type MessageAction } from './getMessageActions';
+import { senderName } from '../../utils/senderName';
+import type { Message } from '../../types/message';
 
 const ACTION_LABELS: Record<MessageAction, { icon: string; label: string }> = {
   reply: { icon: '↩︎', label: 'Reply' },

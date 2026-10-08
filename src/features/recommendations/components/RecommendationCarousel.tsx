@@ -1,5 +1,5 @@
 import { FlatList, type ListRenderItemInfo } from 'react-native';
-import type { Recommendation } from '../types';
+import type { Recommendation } from '../../../types/recommendation';
 import { CARD_WIDTH, RecommendationCard } from './RecommendationCard';
 
 const GAP = 10;

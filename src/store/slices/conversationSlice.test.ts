@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api/conversationApi';
 import type { TypingSender } from '../../api/conversationApi';
-import type { Message } from '../../features/chat/types';
+import type { Message } from '../../types/message';
 import {
   conversationReducer,
   deliverMessage,

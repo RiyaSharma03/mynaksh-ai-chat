@@ -4,14 +4,12 @@ import {
   type FlashListRef,
   type ListRenderItemInfo,
 } from '@shopify/flash-list';
-import { useAppSelector } from '../../../store/hooks';
-import {
-  selectTimeline,
-  selectTypingSender,
-} from '../../../store/slices/conversationSlice';
-import type { TimelineItem } from '../buildTimeline';
+import { useAppSelector } from '../../store/hooks';
+import { selectTypingSender } from '../../store/slices/conversationSlice';
+import type { TimelineItem } from './buildTimeline';
+import { selectTimeline } from './selectTimeline';
 import { KeyboardAwareChatScroll } from './KeyboardAwareChatScroll';
-import { DateSeparator } from './DateSeparator';
+import { LabelDivider } from '../../components/LabelDivider';
 import { MessageRow } from './MessageRow';
 import { TypingIndicator } from './TypingIndicator';
 
@@ -40,7 +38,7 @@ const getItemType = (item: ListItem) =>
 const renderItem = ({ item }: ListRenderItemInfo<ListItem>) => {
   switch (item.kind) {
     case 'date':
-      return <DateSeparator label={item.label} />;
+      return <LabelDivider label={item.label} />;
     case 'typing':
       return <TypingIndicator />;
     case 'message':

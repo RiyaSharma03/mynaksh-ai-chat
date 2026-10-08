@@ -1,5 +1,5 @@
-import type { Message } from '../features/chat/types';
-import type { Feedback } from '../features/feedback/types';
+import type { Message } from '../types/message';
+import type { Feedback } from '../types/feedback';
 import { conversationMock } from './mock/conversationMock';
 
 /**

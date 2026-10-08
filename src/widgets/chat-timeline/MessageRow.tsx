@@ -1,14 +1,14 @@
 import { memo } from 'react';
 import { View } from 'react-native';
-import { useAppSelector } from '../../../store/hooks';
-import { cn } from '../../../utils/cn';
-import { selectMessageById } from '../../../store/slices/conversationSlice';
-import { AiMessageView } from '../messages/AiMessageView';
-import { HumanMessageView } from '../messages/HumanMessageView';
-import type { GroupPosition } from '../messages/MessageBubble';
-import { SystemMessageView } from '../messages/SystemMessageView';
-import { UserMessageView } from '../messages/UserMessageView';
-import type { Message } from '../types';
+import { useAppSelector } from '../../store/hooks';
+import { cn } from '../../utils/cn';
+import { selectMessageById } from '../../store/slices/conversationSlice';
+import { AiMessageView } from './messages/AiMessageView';
+import { HumanMessageView } from './messages/HumanMessageView';
+import type { GroupPosition } from './messages/MessageBubble';
+import { SystemMessageView } from './messages/SystemMessageView';
+import { UserMessageView } from './messages/UserMessageView';
+import type { Message } from '../../types/message';
 
 type MessageRowProps = { id: string } & GroupPosition;
 

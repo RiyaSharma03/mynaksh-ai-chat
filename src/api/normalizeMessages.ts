@@ -1,5 +1,5 @@
-import type { Message } from '../features/chat/types';
-import type { Recommendation } from '../features/recommendations/types';
+import type { Message } from '../types/message';
+import type { Recommendation } from '../types/recommendation';
 
 /**
  * The shape the server sends, before normalization. Everything beyond id and

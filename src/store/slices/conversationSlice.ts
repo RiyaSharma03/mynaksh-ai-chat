@@ -1,6 +1,5 @@
 import {
   createEntityAdapter,
-  createSelector,
   createSlice,
   isAnyOf,
   nanoid,
@@ -8,11 +7,10 @@ import {
 } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api/conversationApi';
 import type { TypingSender } from '../../api/conversationApi';
-import type { FeedbackReason } from '../../features/feedback/types';
+import type { FeedbackReason } from '../../types/feedback';
 import type { RootState } from '..';
 import { createAppAsyncThunk } from '../hooks';
-import { buildTimeline } from '../../features/chat/buildTimeline';
-import type { Message, UserMessage } from '../../features/chat/types';
+import type { Message, UserMessage } from '../../types/message';
 
 /**
  * Messages are normalized (ids + entities) by RTK's entity adapter and kept
@@ -243,8 +241,3 @@ export const selectReplyTarget = (state: RootState) => {
   const id = state.conversation.replyToId;
   return id ? state.conversation.entities[id] : undefined;
 };
-
-/** List rows (date separators + grouping). Memoized: recomputed only when messages change. */
-export const selectTimeline = createSelector([selectAllMessages], messages =>
-  buildTimeline(messages),
-);

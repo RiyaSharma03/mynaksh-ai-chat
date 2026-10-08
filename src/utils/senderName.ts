@@ -1,4 +1,4 @@
-import type { Message } from './types';
+import type { Message } from '../types/message';
 
 /** Display name of a message's sender, for reply previews and quotes. */
 export function senderName(message: Message): string {
