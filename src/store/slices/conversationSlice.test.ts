@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { conversationApi } from '../../api';
-import type { TypingSender } from '../../api/types';
-import type { Message } from './types';
+import { conversationApi } from '../../api/conversationApi';
+import type { TypingSender } from '../../api/conversationApi';
+import type { Message } from '../../features/chat/types';
 import {
   conversationReducer,
   deliverMessage,
@@ -17,7 +17,7 @@ import {
   sendMessage,
 } from './conversationSlice';
 
-jest.mock('../../api', () => ({
+jest.mock('../../api/conversationApi', () => ({
   conversationApi: {
     fetchConversation: jest.fn(),
     sendMessage: jest.fn(),

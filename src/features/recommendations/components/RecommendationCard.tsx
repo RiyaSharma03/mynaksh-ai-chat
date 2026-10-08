@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { Pressable, Text, View } from 'react-native';
-import { getRecommendationDefinition } from '../registry';
+import { getRecommendationDefinition } from '../recommendationRegistry';
 import type { Recommendation } from '../types';
-import { useRecommendationActions } from '../useRecommendationActions';
+import { useRecommendationActions } from '../hooks/useRecommendationActions';
 
 export const CARD_WIDTH = 208;
 

@@ -10,7 +10,7 @@ import {
   loadConversation,
   selectLoadStatus,
   selectMessageCount,
-} from '../features/chat/conversationSlice';
+} from '../store/slices/conversationSlice';
 import { useAppDispatch, useAppSelector } from '../store/hooks';
 
 export function ConversationScreen() {

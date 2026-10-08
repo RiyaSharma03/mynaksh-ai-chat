@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import { readString } from '../data';
+import { readString } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
 export const promotion: RecommendationDefinition = {

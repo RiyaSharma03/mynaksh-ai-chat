@@ -19,7 +19,7 @@ const dark = {
   danger: '#F87171',
 };
 
-export type ThemeColors = typeof dark;
+type ThemeColors = typeof dark;
 export type ColorScheme = 'light' | 'dark';
 
 const light: ThemeColors = {
@@ -34,4 +34,4 @@ const light: ThemeColors = {
   danger: '#DC2626',
 };
 
-export const themes: Record<ColorScheme, ThemeColors> = { light, dark };
+export const colorSchemes: Record<ColorScheme, ThemeColors> = { light, dark };

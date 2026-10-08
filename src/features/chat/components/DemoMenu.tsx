@@ -1,8 +1,7 @@
 import { ActionSheetIOS, Alert, Platform, Pressable, Text } from 'react-native';
-import { env } from '../../../config/env';
-import { mockScenario } from '../../../api/mock/mockConversationApi';
+import { mockScenario } from '../../../api/mock/conversationMock';
 import { useAppDispatch } from '../../../store/hooks';
-import { loadConversation } from '../conversationSlice';
+import { loadConversation } from '../../../store/slices/conversationSlice';
 
 const OPTIONS = [
   'Reload conversation',
@@ -11,12 +10,9 @@ const OPTIONS = [
 ] as const;
 const SCENARIOS = ['normal', 'empty', 'error'] as const;
 
-/**
- * Lets the demo show every load state without a server. Only exists in mock mode.
- */
+/** Header menu to demo the loading, empty and error states with the mock backend. */
 export function DemoMenu() {
   const dispatch = useAppDispatch();
-  if (env.apiMode !== 'mock') return null;
 
   const run = (index: number) => {
     const scenario = SCENARIOS[index];

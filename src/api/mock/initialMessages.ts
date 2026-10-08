@@ -1,4 +1,4 @@
-import type { WireMessage } from '../types';
+import type { WireMessage } from '../normalizeMessages';
 
 const minutesAgo = (minutes: number) =>
   new Date(Date.now() - minutes * 60_000).toISOString();
@@ -9,7 +9,7 @@ const DAY = 24 * 60;
  * Schema extensions: createdAt on every message, author on human messages,
  * and `data` / extra types on recommendations.
  */
-export const mockConversation: WireMessage[] = [
+export const initialMessages: WireMessage[] = [
   {
     id: 'h1',
     type: 'system',

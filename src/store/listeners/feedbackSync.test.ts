@@ -1,13 +1,13 @@
-import { conversationApi } from '../../api';
-import { makeStore } from '../../store';
+import { conversationApi } from '../../api/conversationApi';
+import { makeStore } from '..';
 import {
   feedbackRated,
   feedbackReasonToggled,
   loadConversation,
   selectMessageById,
-} from '../chat/conversationSlice';
+} from '../slices/conversationSlice';
 
-jest.mock('../../api', () => ({
+jest.mock('../../api/conversationApi', () => ({
   conversationApi: {
     fetchConversation: jest.fn(),
     sendMessage: jest.fn(),

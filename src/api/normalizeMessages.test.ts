@@ -1,10 +1,10 @@
-import { normalizeMessages } from './normalize';
-import { mockConversation } from './mock/conversation';
+import { normalizeMessages } from './normalizeMessages';
+import { initialMessages } from './mock/initialMessages';
 
 describe('normalizeMessages', () => {
   it('turns the mock payload into typed messages with defaults', () => {
-    const messages = normalizeMessages(mockConversation);
-    expect(messages).toHaveLength(mockConversation.length);
+    const messages = normalizeMessages(initialMessages);
+    expect(messages).toHaveLength(initialMessages.length);
 
     const ai = messages.find(m => m.id === '3');
     expect(ai?.type).toBe('ai');

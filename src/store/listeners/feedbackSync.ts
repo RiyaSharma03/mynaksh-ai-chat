@@ -1,10 +1,10 @@
 import type { UnknownAction } from '@reduxjs/toolkit';
-import { conversationApi } from '../../api';
-import { startAppListening } from '../../store/listener';
+import { conversationApi } from '../../api/conversationApi';
+import { startAppListening } from '../listenerMiddleware';
 import {
   feedbackRated,
   feedbackReasonToggled,
-} from '../chat/conversationSlice';
+} from '../slices/conversationSlice';
 
 type FeedbackAction =
   | ReturnType<typeof feedbackRated>

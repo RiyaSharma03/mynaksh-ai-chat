@@ -1,5 +1,5 @@
 import { CardMeta } from '../components/CardMeta';
-import { readString } from '../data';
+import { readString } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
 export const gemstone: RecommendationDefinition = {

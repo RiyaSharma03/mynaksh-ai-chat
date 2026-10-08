@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import { useTheme } from '../../../theme/useTheme';
 import { cn } from '../../../utils/cn';
-import { sendMessage } from '../conversationSlice';
+import { sendMessage } from '../../../store/slices/conversationSlice';
 import { ReplyPreview } from './ReplyPreview';
 
 /**

@@ -2,7 +2,7 @@ import { memo } from 'react';
 import { View } from 'react-native';
 import { useAppSelector } from '../../../store/hooks';
 import { cn } from '../../../utils/cn';
-import { selectMessageById } from '../conversationSlice';
+import { selectMessageById } from '../../../store/slices/conversationSlice';
 import { AiMessageView } from '../messages/AiMessageView';
 import { HumanMessageView } from '../messages/HumanMessageView';
 import type { GroupPosition } from '../messages/MessageBubble';

@@ -1,6 +1,27 @@
 import type { Message } from '../features/chat/types';
 import type { Recommendation } from '../features/recommendations/types';
-import type { WireMessage, WireRecommendation } from './types';
+
+/**
+ * The shape the server sends, before normalization. Everything beyond id and
+ * type is optional, because a server response can't be trusted to be complete.
+ */
+interface WireRecommendation {
+  id?: string;
+  type?: string;
+  title?: string;
+  subtitle?: string;
+  data?: Record<string, unknown>;
+}
+
+export interface WireMessage {
+  id?: string;
+  type?: string;
+  text?: string;
+  createdAt?: string;
+  replyToId?: string;
+  author?: { name?: string };
+  recommendations?: WireRecommendation[];
+}
 
 /**
  * The one place untrusted server data becomes our typed model.

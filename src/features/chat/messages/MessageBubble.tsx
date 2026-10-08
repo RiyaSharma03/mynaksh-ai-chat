@@ -2,7 +2,7 @@ import type { PropsWithChildren } from 'react';
 import { Keyboard, Pressable } from 'react-native';
 import { useAppDispatch } from '../../../store/hooks';
 import { cn } from '../../../utils/cn';
-import { messageSelected } from '../conversationSlice';
+import { messageSelected } from '../../../store/slices/conversationSlice';
 
 export interface GroupPosition {
   isFirstInGroup: boolean;

@@ -6,13 +6,13 @@ import {
   nanoid,
   type PayloadAction,
 } from '@reduxjs/toolkit';
-import { conversationApi } from '../../api';
-import type { TypingSender } from '../../api/types';
-import type { FeedbackReason } from '../feedback/types';
-import type { RootState } from '../../store';
-import { createAppAsyncThunk } from '../../store/hooks';
-import { buildTimeline } from './timeline';
-import type { Message, UserMessage } from './types';
+import { conversationApi } from '../../api/conversationApi';
+import type { TypingSender } from '../../api/conversationApi';
+import type { FeedbackReason } from '../../features/feedback/types';
+import type { RootState } from '..';
+import { createAppAsyncThunk } from '../hooks';
+import { buildTimeline } from '../../features/chat/buildTimeline';
+import type { Message, UserMessage } from '../../features/chat/types';
 
 /**
  * Messages are normalized (ids + entities) by RTK's entity adapter and kept
@@ -27,7 +27,6 @@ type LoadStatus = 'idle' | 'loading' | 'ready' | 'error';
 
 const initialState = messagesAdapter.getInitialState({
   loadStatus: 'idle' as LoadStatus,
-  loadError: null as string | null,
   /**
    * Who is typing a reply, keyed by the user message being answered. A map,
    * so overlapping replies each clear only their own entry.
@@ -75,7 +74,7 @@ export const deliverMessage = createAppAsyncThunk(
  * (AI or astrologer), each reply enters through messageReceived, the same
  * action a socket push would use.
  */
-export const requestReplies = createAppAsyncThunk(
+const requestReplies = createAppAsyncThunk(
   'conversation/replies',
   async (input: { messageId: string; text: string }, { dispatch }) => {
     const replies = await conversationApi.getReplies(input, {
@@ -181,16 +180,13 @@ const conversationSlice = createSlice({
     builder
       .addCase(loadConversation.pending, state => {
         state.loadStatus = 'loading';
-        state.loadError = null;
       })
       .addCase(loadConversation.fulfilled, (state, action) => {
         state.loadStatus = 'ready';
         messagesAdapter.setAll(state, action.payload);
       })
-      .addCase(loadConversation.rejected, (state, action) => {
+      .addCase(loadConversation.rejected, state => {
         state.loadStatus = 'error';
-        state.loadError =
-          action.error.message ?? 'Unable to load conversation.';
       })
       .addCase(deliverMessage.pending, (state, action) => {
         setStatus(state, action.meta.arg, 'sending');
@@ -212,10 +208,10 @@ const conversationSlice = createSlice({
 });
 
 export const conversationReducer = conversationSlice.reducer;
+const { messageAdded, messageReceived, typingChanged } =
+  conversationSlice.actions;
+
 export const {
-  messageAdded,
-  messageReceived,
-  typingChanged,
   messageRemoved,
   messageSelected,
   replyStarted,
@@ -227,7 +223,6 @@ export const {
 export const {
   selectAll: selectAllMessages,
   selectById: selectMessageById,
-  selectIds: selectMessageIds,
   selectTotal: selectMessageCount,
 } = messagesAdapter.getSelectors<RootState>(state => state.conversation);
 

@@ -1,4 +1,4 @@
-import { FeedbackBar } from '../../feedback/FeedbackBar';
+import { FeedbackBar } from '../../feedback/components/FeedbackBar';
 import { RecommendationRail } from '../../recommendations/components/RecommendationRail';
 import type { AiMessage } from '../types';
 import { MessageBubble, type GroupPosition } from './MessageBubble';

@@ -1,7 +1,7 @@
-import type { ConversationApi } from '../types';
-import { normalizeMessages } from '../normalize';
+import type { ConversationApi } from '../conversationApi';
+import { normalizeMessages } from '../normalizeMessages';
 import { pickAiReply } from './aiReplies';
-import { mockConversation } from './conversation';
+import { initialMessages } from './initialMessages';
 
 const LATENCY_MS = 800;
 const AI_THINKING_MS = 1500;
@@ -10,17 +10,20 @@ const HUMAN_TYPING_MS = 3000;
 const HANDOFF_PATTERN = /astrologer|human|expert|real person/i;
 const ASTROLOGER = { name: 'Acharya Vinod' };
 
-/** Switches for demoing loading, empty and error states without a server. */
+/** Demo switch for the loading, empty and error states (set from the header menu). */
 export const mockScenario = {
   /** 'error' fails the next load only, so Retry recovers. */
   load: 'normal' as 'normal' | 'empty' | 'error',
-  failSends: false,
 };
 
 const delay = (ms: number) =>
   new Promise<void>(resolve => setTimeout(resolve, ms));
 
-export const mockConversationApi: ConversationApi = {
+/**
+ * An in-memory stand-in for the backend: same contract, fake latency.
+ * Data goes through normalizeMessages, as a real server response would.
+ */
+export const conversationMock: ConversationApi = {
   async fetchConversation() {
     await delay(LATENCY_MS);
     if (mockScenario.load === 'error') {
@@ -28,14 +31,13 @@ export const mockConversationApi: ConversationApi = {
       throw new Error('Unable to load conversation.');
     }
     if (mockScenario.load === 'empty') return [];
-    return normalizeMessages(mockConversation);
+    return normalizeMessages(initialMessages);
   },
 
   /** Text containing "fail" fails, to demo the retry flow. */
   async sendMessage({ text }) {
     await delay(LATENCY_MS);
-    if (mockScenario.failSends || /fail/i.test(text))
-      throw new Error('Failed to send.');
+    if (/fail/i.test(text)) throw new Error('Failed to send.');
     return { createdAt: Date.now() };
   },
 

@@ -4,14 +4,14 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { cn } from '../../utils/cn';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { cn } from '../../../utils/cn';
 import {
   feedbackRated,
   feedbackReasonToggled,
   selectMessageById,
-} from '../chat/conversationSlice';
-import { FEEDBACK_REASONS, type FeedbackReason } from './types';
+} from '../../../store/slices/conversationSlice';
+import { FEEDBACK_REASONS, type FeedbackReason } from '../types';
 
 const REASONS = Object.entries(FEEDBACK_REASONS) as Array<
   [FeedbackReason, string]

@@ -1,12 +1,12 @@
 import type { PropsWithChildren } from 'react';
 import { View } from 'react-native';
 import { vars } from 'nativewind';
-import { themes, type ColorScheme } from './theme';
+import { colorSchemes, type ColorScheme } from './colorSchemes';
 import { useTheme } from './useTheme';
 
 // Precomputed once: the CSS variables behind every colour class, per scheme.
 const themeVars = Object.fromEntries(
-  Object.entries(themes).map(([scheme, colors]) => [
+  Object.entries(colorSchemes).map(([scheme, colors]) => [
     scheme,
     vars(
       Object.fromEntries(

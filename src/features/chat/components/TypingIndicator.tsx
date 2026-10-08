@@ -11,7 +11,7 @@ import Animated, {
 } from 'react-native-reanimated';
 import { useAppSelector } from '../../../store/hooks';
 import { useTheme } from '../../../theme/useTheme';
-import { selectTypingSender } from '../conversationSlice';
+import { selectTypingSender } from '../../../store/slices/conversationSlice';
 import { SenderLabel } from '../messages/SenderLabel';
 
 /** Three bouncing dots, animated on the UI thread with Reanimated. */

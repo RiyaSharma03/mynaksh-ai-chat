@@ -17,9 +17,9 @@ import {
   messageSelected,
   replyStarted,
   selectSelectedMessage,
-} from '../conversationSlice';
+} from '../../../store/slices/conversationSlice';
 import { getMessageActions, type MessageAction } from '../messageActions';
-import { senderName } from '../senders';
+import { senderName } from '../senderName';
 import type { Message } from '../types';
 
 const ACTION_LABELS: Record<MessageAction, { icon: string; label: string }> = {

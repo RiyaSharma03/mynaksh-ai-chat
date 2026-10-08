@@ -1,5 +1,5 @@
 import { useColorScheme } from 'nativewind';
-import { themes } from './theme';
+import { colorSchemes } from './colorSchemes';
 
 /**
  * The active colour scheme and its raw colour values, for the few APIs that
@@ -9,5 +9,5 @@ import { themes } from './theme';
 export function useTheme() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const scheme = colorScheme ?? 'dark';
-  return { scheme, colors: themes[scheme], toggle: toggleColorScheme };
+  return { scheme, colors: colorSchemes[scheme], toggle: toggleColorScheme };
 }

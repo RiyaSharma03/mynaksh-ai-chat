@@ -1,5 +1,5 @@
 import { CardMeta } from '../components/CardMeta';
-import { readNumber } from '../data';
+import { readNumber } from '../dataReaders';
 import type { RecommendationDefinition } from '../types';
 
 export const tarot: RecommendationDefinition = {

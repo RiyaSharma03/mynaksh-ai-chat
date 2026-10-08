@@ -1,8 +1,8 @@
-const { themes } = require('./src/theme/theme.ts');
+const { colorSchemes } = require('./src/theme/colorSchemes.ts');
 
 // Every theme colour becomes a class backed by a CSS variable that ThemeProvider sets.
 const colors = Object.fromEntries(
-  Object.keys(themes.dark).map(name => [name, `var(--color-${name})`]),
+  Object.keys(colorSchemes.dark).map(name => [name, `var(--color-${name})`]),
 );
 
 /** @type {import('tailwindcss').Config} */
