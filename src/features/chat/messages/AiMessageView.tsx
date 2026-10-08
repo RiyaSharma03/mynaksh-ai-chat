@@ -1,3 +1,4 @@
+import { RecommendationRail } from '../../recommendations/components/RecommendationRail';
 import type { AiMessage } from '../types';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
@@ -18,7 +19,9 @@ export function AiMessageView({
       >
         <MessageText text={message.text} className="text-foreground" />
       </MessageBubble>
-      {/* Step 5: recommendation cards. Step 7: feedback. */}
+      {message.recommendations.length > 0 && (
+        <RecommendationRail recommendations={message.recommendations} />
+      )}
       {group.isLastInGroup && (
         <Timestamp value={message.createdAt} side="start" />
       )}
