@@ -9,7 +9,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../../theme/useTheme';
 
 /** One dot: fades and lifts, offset by its index so the three form a wave. */
 function Dot({ index }: { index: number }) {

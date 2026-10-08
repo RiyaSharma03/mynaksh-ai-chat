@@ -1,5 +1,5 @@
 import { ActionSheetIOS, Alert, Platform } from 'react-native';
-import { IconButton } from '../../components/IconButton';
+import { IconButton } from '../common/IconButton';
 import { mockScenario } from '../../api/mock/conversationMock';
 import { useAppDispatch } from '../../store/hooks';
 import { loadConversation } from '../../store/slices/conversationSlice';

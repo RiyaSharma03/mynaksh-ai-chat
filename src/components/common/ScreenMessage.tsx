@@ -1,5 +1,5 @@
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
-import { useTheme } from '../theme/useTheme';
+import { useTheme } from '../../theme/useTheme';
 
 interface ScreenMessageProps {
   title: string;

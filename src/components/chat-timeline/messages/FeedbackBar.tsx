@@ -4,7 +4,7 @@ import Animated, {
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { Chip } from '../../../components/Chip';
+import { Chip } from '../../common/Chip';
 import { useAppDispatch, useAppSelector } from '../../../store/hooks';
 import {
   feedbackRated,

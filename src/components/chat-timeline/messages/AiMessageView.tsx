@@ -3,7 +3,7 @@ import { RecommendationCarousel } from '../../recommendations/RecommendationCaro
 import type { AiMessage } from '../../../types/message';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
 import { MessageText } from './MessageText';
-import { SenderLabel } from '../../../components/SenderLabel';
+import { SenderLabel } from '../../common/SenderLabel';
 import { MessageTime } from './MessageTime';
 
 export function AiMessageView({

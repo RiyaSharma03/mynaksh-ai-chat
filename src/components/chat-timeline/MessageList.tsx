@@ -9,7 +9,7 @@ import { selectTypingSender } from '../../store/slices/conversationSlice';
 import type { TimelineItem } from './buildTimeline';
 import { selectTimeline } from './selectTimeline';
 import { KeyboardAwareChatScroll } from './KeyboardAwareChatScroll';
-import { LabelDivider } from '../../components/LabelDivider';
+import { LabelDivider } from '../common/LabelDivider';
 import { MessageRow } from './MessageRow';
 import { TypingIndicator } from './TypingIndicator';
 

@@ -2,10 +2,10 @@ import { useEffect } from 'react';
 import { View } from 'react-native';
 import { KeyboardStickyView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ScreenMessage } from '../components/ScreenMessage';
-import { Composer } from '../widgets/composer/Composer';
-import { MessageActionSheet } from '../widgets/message-actions/MessageActionSheet';
-import { MessageList } from '../widgets/chat-timeline/MessageList';
+import { ScreenMessage } from '../components/common/ScreenMessage';
+import { Composer } from '../components/composer/Composer';
+import { MessageActionSheet } from '../components/message-actions/MessageActionSheet';
+import { MessageList } from '../components/chat-timeline/MessageList';
 import {
   loadConversation,
   selectLoadStatus,
