@@ -1,4 +1,4 @@
-import type { WireMessage } from '../../../utils/normalizeMessages';
+import type { WireMessage } from '../../utils/normalizeMessages';
 
 const minutesAgo = (minutes: number) =>
   new Date(Date.now() - minutes * 60_000).toISOString();

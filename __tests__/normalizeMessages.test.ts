@@ -1,4 +1,4 @@
-import { normalizeMessages } from '../src/utils/normalizeMessages';
+import { normalizeMessages } from '../src/services/utils/normalizeMessages';
 import { initialMessages } from '../src/services/mocks/data/initialMessages';
 
 describe('normalizeMessages', () => {
