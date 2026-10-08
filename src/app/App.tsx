@@ -1,10 +1,16 @@
 import '../../global.css';
 import { useMemo } from 'react';
 import { StatusBar } from 'react-native';
+import { Provider } from 'react-redux';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { DarkTheme, DefaultTheme, NavigationContainer } from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import { RootNavigator } from '../navigation/RootNavigator';
+import { store } from '../store';
 import { ThemeProvider } from '../theme/ThemeProvider';
 import { useTheme } from '../theme/useTheme';
 
@@ -13,13 +19,15 @@ import { useTheme } from '../theme/useTheme';
  */
 export default function App() {
   return (
-    <GestureHandlerRootView className="flex-1">
-      <SafeAreaProvider>
-        <ThemeProvider>
-          <ThemedNavigation />
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+    <Provider store={store}>
+      <GestureHandlerRootView className="flex-1">
+        <SafeAreaProvider>
+          <ThemeProvider>
+            <ThemedNavigation />
+          </ThemeProvider>
+        </SafeAreaProvider>
+      </GestureHandlerRootView>
+    </Provider>
   );
 }
 
@@ -44,7 +52,9 @@ function ThemedNavigation() {
 
   return (
     <>
-      <StatusBar barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'} />
+      <StatusBar
+        barStyle={scheme === 'dark' ? 'light-content' : 'dark-content'}
+      />
       <NavigationContainer theme={navigationTheme}>
         <RootNavigator />
       </NavigationContainer>
