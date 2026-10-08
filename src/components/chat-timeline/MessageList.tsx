@@ -1,17 +1,21 @@
-import { useEffect, useMemo, useRef } from 'react';
+import { forwardRef, useEffect, useMemo, useRef } from 'react';
+import { type ScrollViewProps, Text, View } from 'react-native';
 import {
   FlashList,
   type FlashListRef,
   type ListRenderItemInfo,
 } from '@shopify/flash-list';
+import {
+  KeyboardChatScrollView,
+  type KeyboardChatScrollViewRef,
+} from 'react-native-keyboard-controller';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useAppSelector } from '../../store/hooks';
 import {
   selectTimeline,
   selectTypingSender,
 } from '../../store/slices/conversationSlice';
 import type { TimelineItem } from '../../utils/buildTimeline';
-import { KeyboardAwareChatScroll } from './KeyboardAwareChatScroll';
-import { LabelDivider } from '../ui/LabelDivider';
 import { MessageRow } from './MessageRow';
 import { TypingIndicator } from './TypingIndicator';
 
@@ -40,7 +44,7 @@ const getItemType = (item: ListItem) =>
 const renderItem = ({ item }: ListRenderItemInfo<ListItem>) => {
   switch (item.kind) {
     case 'date':
-      return <LabelDivider label={item.label} />;
+      return <DateSeparator label={item.label} />;
     case 'typing':
       return <TypingIndicator />;
     case 'message':
@@ -84,7 +88,7 @@ export function MessageList() {
       keyExtractor={keyExtractor}
       getItemType={getItemType}
       renderItem={renderItem}
-      renderScrollComponent={KeyboardAwareChatScroll}
+      renderScrollComponent={KeyboardAwareScroll}
       initialScrollIndex={items.length - 1}
       maintainVisibleContentPosition={CHAT_POSITION}
       contentContainerStyle={CONTENT_STYLE}
@@ -92,3 +96,38 @@ export function MessageList() {
     />
   );
 }
+
+/** "Today" / "Yesterday" divider between days. */
+function DateSeparator({ label }: { label: string }) {
+  return (
+    <View
+      className="flex-row items-center gap-3 px-6 pb-1 pt-5"
+      accessibilityRole="header"
+    >
+      <View className="h-px flex-1 bg-border" />
+      <Text className="text-xs font-medium text-muted">{label}</Text>
+      <View className="h-px flex-1 bg-border" />
+    </View>
+  );
+}
+
+/**
+ * The list's scroll view: lifts messages with the keyboard, in sync with its
+ * animation. `offset` is the safe-area gap the keyboard covers anyway.
+ */
+const KeyboardAwareScroll = forwardRef<
+  KeyboardChatScrollViewRef,
+  ScrollViewProps
+>((props, ref) => {
+  const { bottom } = useSafeAreaInsets();
+  return (
+    <KeyboardChatScrollView
+      ref={ref}
+      offset={bottom}
+      automaticallyAdjustContentInsets={false}
+      contentInsetAdjustmentBehavior="never"
+      keyboardDismissMode="interactive"
+      {...props}
+    />
+  );
+});

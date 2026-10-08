@@ -1,5 +1,4 @@
 import { Text, View } from 'react-native';
-import { CardDetail } from '../components/ui/CardDetail';
 import type {
   Recommendation,
   RecommendationDefinition,
@@ -12,6 +11,13 @@ const readString = (rec: Recommendation, key: string) =>
 const readNumber = (rec: Recommendation, key: string) =>
   typeof rec.data?.[key] === 'number' ? (rec.data[key] as number) : undefined;
 
+/** One muted line of type-specific detail; renders nothing when empty. */
+function Detail({ children }: { children?: string }) {
+  return children ? (
+    <Text className="text-xs text-muted">{children}</Text>
+  ) : null;
+}
+
 /**
  * Every recommendation type the app knows. The card renders any entry, so
  * adding a type means adding one entry here: no other code changes.
@@ -23,7 +29,7 @@ const RECOMMENDATION_TYPES: Record<string, RecommendationDefinition> = {
     accent: '#5DA9FF',
     ctaLabel: 'View gemstone',
     Body: ({ recommendation }) => (
-      <CardDetail>{readString(recommendation, 'price')}</CardDetail>
+      <Detail>{readString(recommendation, 'price')}</Detail>
     ),
   },
 
@@ -34,9 +40,7 @@ const RECOMMENDATION_TYPES: Record<string, RecommendationDefinition> = {
     ctaLabel: 'Start reading',
     Body: ({ recommendation }) => {
       const cards = readNumber(recommendation, 'cards');
-      return (
-        <CardDetail>{cards ? `${cards}-card spread` : undefined}</CardDetail>
-      );
+      return <Detail>{cards ? `${cards}-card spread` : undefined}</Detail>;
     },
     onPress: (recommendation, { showAlert }) =>
       showAlert(`🔮 ${recommendation.title}`, 'Shuffling your cards…'),
@@ -70,9 +74,7 @@ const RECOMMENDATION_TYPES: Record<string, RecommendationDefinition> = {
     ctaLabel: 'Read article',
     Body: ({ recommendation }) => {
       const minutes = readNumber(recommendation, 'readMinutes');
-      return (
-        <CardDetail>{minutes ? `${minutes} min read` : undefined}</CardDetail>
-      );
+      return <Detail>{minutes ? `${minutes} min read` : undefined}</Detail>;
     },
   },
 

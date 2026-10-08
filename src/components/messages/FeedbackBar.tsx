@@ -1,10 +1,10 @@
-import { Text, View } from 'react-native';
+import type { ReactNode } from 'react';
+import { Pressable, Text, View } from 'react-native';
 import Animated, {
   FadeIn,
   FadeOut,
   LinearTransition,
 } from 'react-native-reanimated';
-import { Chip } from '../ui/Chip';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import {
   feedbackRated,
@@ -12,6 +12,7 @@ import {
   saveFeedback,
   selectMessageById,
 } from '../../store/slices/conversationSlice';
+import { cn } from '../../utils/cn';
 import { FEEDBACK_REASONS, type FeedbackReason } from '../../types/feedback';
 
 const REASONS = Object.entries(FEEDBACK_REASONS) as Array<
@@ -83,5 +84,43 @@ export function FeedbackBar({ messageId }: { messageId: string }) {
         </Animated.View>
       )}
     </View>
+  );
+}
+
+interface ChipProps {
+  label: ReactNode;
+  selected?: boolean;
+  onPress: () => void;
+  accessibilityLabel?: string;
+}
+
+/** Pill-shaped toggle button: highlighted when selected. */
+function Chip({
+  label,
+  selected = false,
+  onPress,
+  accessibilityLabel,
+}: ChipProps) {
+  return (
+    <Pressable
+      onPress={onPress}
+      hitSlop={4}
+      accessibilityRole="button"
+      accessibilityLabel={accessibilityLabel}
+      accessibilityState={{ selected }}
+      className={cn(
+        'rounded-full border px-3 py-1.5 active:opacity-80',
+        selected ? 'border-primary bg-primary' : 'border-border bg-surface',
+      )}
+    >
+      <Text
+        className={cn(
+          'text-xs',
+          selected ? 'font-semibold text-white' : 'text-foreground',
+        )}
+      >
+        {label}
+      </Text>
+    </Pressable>
   );
 }
