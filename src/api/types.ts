@@ -1,4 +1,5 @@
 import type { Message } from '../features/chat/types';
+import type { Feedback } from '../features/feedback/types';
 
 /**
  * The shape the backend sends, before normalization. Everything beyond
@@ -35,6 +36,11 @@ export interface ConversationApi {
    * messages from any sender. `onTyping` reports who is typing meanwhile.
    */
   getReplies(input: ReplyInput, events: ReplyEvents): Promise<Message[]>;
+  /** Stores the user's latest feedback on an AI message (replaces any earlier one). */
+  submitFeedback(input: {
+    messageId: string;
+    feedback: Feedback;
+  }): Promise<void>;
 }
 
 export interface ReplyInput {

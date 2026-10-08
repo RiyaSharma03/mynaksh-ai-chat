@@ -8,6 +8,7 @@ import {
 } from '@reduxjs/toolkit';
 import { conversationApi } from '../../api';
 import type { TypingSender } from '../../api/types';
+import type { FeedbackReason } from '../feedback/types';
 import type { RootState } from '../../store';
 import { createAppAsyncThunk } from '../../store/hooks';
 import { buildTimeline } from './timeline';
@@ -149,6 +150,32 @@ const conversationSlice = createSlice({
     replyCancelled(state) {
       state.replyToId = null;
     },
+    /** 👍 / 👎. Tapping the active rating again clears it. Reasons only apply to a dislike. */
+    feedbackRated(
+      state,
+      action: PayloadAction<{ messageId: string; rating: 'like' | 'dislike' }>,
+    ) {
+      const message = state.entities[action.payload.messageId];
+      if (message?.type !== 'ai') return;
+      const { feedback } = message;
+      feedback.rating =
+        feedback.rating === action.payload.rating
+          ? null
+          : action.payload.rating;
+      if (feedback.rating !== 'dislike') feedback.reasons = [];
+    },
+    feedbackReasonToggled(
+      state,
+      action: PayloadAction<{ messageId: string; reason: FeedbackReason }>,
+    ) {
+      const message = state.entities[action.payload.messageId];
+      if (message?.type !== 'ai' || message.feedback.rating !== 'dislike')
+        return;
+      const { reasons } = message.feedback;
+      const index = reasons.indexOf(action.payload.reason);
+      if (index >= 0) reasons.splice(index, 1);
+      else reasons.push(action.payload.reason);
+    },
   },
   extraReducers: builder => {
     builder
@@ -193,6 +220,8 @@ export const {
   messageSelected,
   replyStarted,
   replyCancelled,
+  feedbackRated,
+  feedbackReasonToggled,
 } = conversationSlice.actions;
 
 export const {

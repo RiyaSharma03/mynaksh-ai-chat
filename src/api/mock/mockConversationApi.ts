@@ -77,4 +77,8 @@ export const mockConversationApi: ConversationApi = {
       },
     ]);
   },
+
+  async submitFeedback() {
+    await delay(300);
+  },
 };

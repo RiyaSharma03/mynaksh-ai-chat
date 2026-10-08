@@ -43,4 +43,11 @@ export const httpConversationApi: ConversationApi = {
     );
     return normalizeMessages(wire);
   },
+
+  async submitFeedback({ messageId, feedback }) {
+    await request(`/conversation/messages/${messageId}/feedback`, {
+      method: 'PUT',
+      body: JSON.stringify(feedback),
+    });
+  },
 };

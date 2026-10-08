@@ -1,3 +1,4 @@
+import { FeedbackBar } from '../../feedback/FeedbackBar';
 import { RecommendationRail } from '../../recommendations/components/RecommendationRail';
 import type { AiMessage } from '../types';
 import { MessageBubble, type GroupPosition } from './MessageBubble';
@@ -23,6 +24,7 @@ export function AiMessageView({
       {message.recommendations.length > 0 && (
         <RecommendationRail recommendations={message.recommendations} />
       )}
+      <FeedbackBar messageId={message.id} />
       {group.isLastInGroup && (
         <Timestamp value={message.createdAt} side="start" />
       )}
